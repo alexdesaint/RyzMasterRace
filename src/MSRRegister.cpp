@@ -4,121 +4,6 @@
 #include <fcntl.h>
 #include <iostream>
 
-enum MSR {
-    TSC = 0,
-    APIC_BAR,
-    EBL_CR_POWERON,
-    PATCH_LEVEL,
-    MPERF,
-    APERF,
-    MTRRcap,
-    SYSENTER_CS,
-    SYSENTER_ESP,
-    SYSENTER_EIP,
-    MCG_CAP,
-    MCG_STAT,
-    MCG_CTL,
-    DBG_CTL_MSR,
-    BR_FROM,
-    BR_TO,
-    LastExcpFromIp,
-    LastExcpToIp,
-    MtrrVarBase,
-    MtrrVarMask,
-    MtrrFix_64K,
-    MtrrFix_16K_0,
-    MtrrFix_16K_1,
-    MtrrFix_4K_0,
-    MtrrFix_4K_1,
-    MtrrFix_4K_2,
-    MtrrFix_4K_3,
-    MtrrFix_4K_4,
-    MtrrFix_4K_5,
-    MtrrFix_4K_6,
-    MtrrFix_4K_7,
-    PAT,
-    MTRRdefType,
-    EFER,
-    STAR,
-    STAR64,
-    STARCOMPAT,
-    SYSCALL_FLAG_MASK,
-    MPerfReadOnly,
-    APerfReadOnly,
-    IRPerfCount,
-    FS_BASE,
-    GS_BASE,
-    KernelGSbase,
-    TSC_AUX,
-    TscRateMsr,
-    McaIntrCfg,
-    PERF_LEGACY_CTL,
-    PERF_LEGACY_CTR,
-    SYS_CFG,
-    HWCR,
-    IORR_BASE,
-    IORR_MASK,
-    TOP_MEM,
-    TOM2,
-    McExcepRedir,
-    ProcNameString,
-    SMI_ON_IO_TRAP,
-    SMI_ON_IO_TRAP_CTL_STS,
-    IntPend,
-    SmiTrigIoCycle,
-    MmioCfgBaseAddr,
-    PStateCurLim,
-    PStateCtl,
-    PStateStat,
-    PStateDef,
-    CStateBaseAddr,
-    CpuWdtCfg,
-    SMM_BASE,
-    SMMAddr,
-    SMMMask,
-    VM_CR,
-    IGNNE,
-    SMM_CTL,
-    VM_HSAVE_PA,
-    SvmLockKey,
-    LocalSmiStatus,
-    AvicDoorbell,
-    VMPAGE_FLUSH,
-    GHCB,
-    SEV_Status,
-    OSVW_ID_Length,
-    OSVW_Status,
-    PERF_CTL,
-    PERF_CTR,
-    ChL3PmcCfg,
-    ChL3Pmc,
-    RAPL_PWR_UNIT,
-    CORE_ENERGY_STAT,
-    PKG_ENERGY_STAT,
-    CPUID_7_Features,
-    CPUID_PWR_THERM,
-    CPUID_Features,
-    CPUID_ExtFeatures,
-    DR1_ADDR_MASK,
-    DR2_ADDR_MASK,
-    DR3_ADDR_MASK,
-    TW_CFG,
-    DR0_ADDR_MASK,
-    IBS_FETCH_CTL,
-    IBS_FETCH_LINADDR,
-    IBS_FETCH_PHYSADDR,
-    IBS_OP_CTL,
-    IBS_OP_RIP,
-    IBS_OP_DATA,
-    IBS_OP_DATA2,
-    IBS_OP_DATA3,
-    IBS_DC_LINADDR,
-    IBS_DC_PHYSADDR,
-    IBS_CTL,
-    BP_IBSTGT_RIP,
-    IC_IBS_EXTD_CTL,
-};
-
 /* Regex changes :
  * - ((MSR.{4}_.{3,4}(\[.\.\.\..\])?)\s\[(.*?)\] \((.*?)\) -->)====="} }, {"$1", "$3", R"=====(* - (_lthree\[1:0\].+?)(?=MSR)MSR(.*) -->)=====", "$1", {0x$2}, R"=====(* - ($\s*(\d{1,2}):(\d{1,2})\s) --> \n$2, $3, R"=====(* - R"=====\(\s*Bits\s*Description --> \n{\n{
  * - \)====="\}, \{"   --> \n)====="}\n}, {"
@@ -3368,8 +3253,7 @@ Support for this register indicated by Core::X86::Cpuid::IbsIdEax[IbsFetchCtlExt
 0000h. The number of cycles when the fetch engine is stalled for an ITLB reload for the sampled fetch. If there is no reload, the latency is 0.)====="}}}};
 
 std::ostream &operator<<(std::ostream &os, const MSRRegister &m) {
-
-    os << "Number of registers : " << MSRRegister::Registers.size() << std::endl;
+    unsigned int valuesCpt = 0;
 
     for (auto &r : MSRRegister::Registers) {
         printf("%-50s", r.name.c_str());
@@ -3380,15 +3264,20 @@ std::ostream &operator<<(std::ostream &os, const MSRRegister &m) {
         os << std::endl;
 
         for(auto &v : r.values) {
-            printf("  %02zi %02zi 0x%016lX %s\n", v.start, v.end, v.mask, v.getName().c_str());
+            if(!v.reserved) {
+                printf("  %02zi %02zi 0x%016lX %s\n", v.start, v.end, v.mask, v.name.c_str());
+                valuesCpt++;
+            }
         }
     }
+
+    os << "Number of registers : " << MSRRegister::Registers.size() << std::endl;
+    os << "Number of values : " << valuesCpt << std::endl;
 
     return os;
 }
 
 void MSRRegister::open() {
-    bool msrFound = false;
     for (;;) {
         std::string fileName = "/dev/cpu/" + std::to_string(numOfCPU) + "/msr";
 
@@ -3454,8 +3343,9 @@ MSRRegister::Value::Value(size_t start, size_t end, std::string description) : s
     else if(start != end) {
         mask = std::pow(2, (start - end) + 1) - 1;
     }
-}
-std::string MSRRegister::Value::getName() const {
-    auto pos = description.find_first_of("\n.:[");
-    return description.substr(0, pos);
+
+    auto pos = this->description.find_first_of("\n.:[");
+    name = this->description.substr(0, pos);
+    if(name.find("Reserved") != std::string::npos)
+        reserved = true;
 }
