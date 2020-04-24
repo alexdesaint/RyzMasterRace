@@ -13,8 +13,8 @@ sudo modprobe msr
 Root privileges are needed to read from MSR device files which are located at `/dev/cpu/*/msr` and PCI device files located at `/sys/bus/pci/devices/0000:00:00.0/config`.
 Instead, you can set them readable :
 ```sh
-sudo chmod og+r /dev/cpu/ -R
-sudo chmod og+r /sys/bus/pci/devices/0000:00:00.0/config
+sudo chmod o+rw /dev/cpu/ -R
+sudo chmod o+rw /sys/bus/pci/devices/0000:00:00.0/config
 ```
 
 On some Linux kernels you may still get an `Operation not permitted` error.
