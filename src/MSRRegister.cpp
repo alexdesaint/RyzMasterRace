@@ -5,12 +5,19 @@
 #include <iostream>
 
 /* Regex changes :
- * - ((MSR.{4}_.{3,4}(\[.\.\.\..\])?)\s\[(.*?)\] \((.*?)\) -->)====="} }, {"$1", "$3", R"=====(* - (_lthree\[1:0\].+?)(?=MSR)MSR(.*) -->)=====", "$1", {0x$2}, R"=====(* - ($\s*(\d{1,2}):(\d{1,2})\s) --> \n$2, $3, R"=====(* - R"=====\(\s*Bits\s*Description --> \n{\n{
+ * - ((MSR.{4}_.{3,4}(\[.\.\.\..\])?)\s\[(.*?)\] \((.*?)\) -->)====="} }, {"$1", "$3", R"=====(*
+ * - (_lthree\[1:0\].+?)(?=MSR)MSR(.*) -->)=====", "$1", {0x$2}, R"=====(*
+ * - ($\s*(\d{1,2}):(\d{1,2})\s) --> \n$2, $3, R"=====(
+ * - R"=====\(\s*Bits\s*Description --> \n{\n{
  * - \)====="\}, \{"   --> \n)====="}\n}, {"
- * - ($\s*(\d{1,2}):(\d{1,2})\s) --> \n$2, $3, R"=====(* - ($\s*(\d{1,2})\s) --> \n$2, $2, R"=====(* - ([^\{])\s(\d{1,2}, \d{1,2}) --> .)====="},\n{$2
+ *
+ * For the bits description
+ * - ($\s*(\d{1,2}):(\d{1,2})\s) --> \n$2, $3, R"=====(
+ * - ($\s*(\d{1,2})\s) --> \n$2, $2, R"=====(
+ * - ([^\{])\s(\d{1,2}, \d{1,2}) --> .)====="},\n{$2
  */
 
-const std::vector<MSRRegister::Register> MSRRegister::Registers = {
+std::vector<MSRRegister::Register> MSRRegister::Registers = {
         {"MSR0000_0010", "Time Stamp Counter", R"=====(Read-write,Volatile. Reset: 0000_0000_0000_0000h.
     The TSC uses a common reference for all sockets, cores and threads.)=====",
          "_lthree[1:0]_core[3:0]_thread[1:0]; ",
@@ -3250,21 +3257,26 @@ Support for this register indicated by Core::X86::Cpuid::IbsIdEax[IbsFetchCtlExt
          "_lthree[1:0]_core[3:0]_thread[1:0]; ",
          {0xC001103C},
          {{63, 16, R"=====(Reserved.)====="}, {15, 0, R"=====(IbsItlbRefillLat: ITLB Refill Latency for the sampled fetch, if there is a reload. Read-only,Volatile. Reset:
-0000h. The number of cycles when the fetch engine is stalled for an ITLB reload for the sampled fetch. If there is no reload, the latency is 0.)====="}}}};
+0000h. The number of cycles when the fetch engine is stalled for an ITLB reload for the sampled fetch. If there is no reload, the latency is 0.)====="}}}
+};
+
+unsigned int MSRRegister::numOfCPU = 24;
+std::vector<int> MSRRegister::filesStreams;
+double MSRRegister::joulesScale = 0.0000153;
 
 std::ostream &operator<<(std::ostream &os, const MSRRegister &m) {
     unsigned int valuesCpt = 0;
 
     for (auto &r : MSRRegister::Registers) {
-        printf("%-50s", r.name.c_str());
+        printf("%-50s", r.name);
 
         for(auto &o : r.offsets){
             printf(" 0x%08lX", o);
         }
         os << std::endl;
 
-        for(auto &v : r.values) {
-            if(!v.reserved) {
+        for(auto &v : r.bitDescriptors) {
+            if(v.type != Type::RESERVED) {
                 printf("  %02zi %02zi 0x%016lX %s\n", v.start, v.end, v.mask, v.name.c_str());
                 valuesCpt++;
             }
@@ -3288,7 +3300,7 @@ void MSRRegister::open() {
     }
 
     if(numOfCPU == 0)
-        throw MSRException("Unable to find any SMR file");
+        throw RegisterException("Unable to find any SMR file");
     else
         printf("found %u CPU SMR\n", numOfCPU);
 
@@ -3298,7 +3310,32 @@ void MSRRegister::open() {
         std::string fileName = "/dev/cpu/" + std::to_string(i) + "/msr";
         filesStreams[i] = ::open(fileName.c_str(), O_RDONLY);
         if (filesStreams[i] < 0) {
-            throw MSRException("Unable to open the file " + fileName + " : " + +strerror(errno));
+            throw RegisterException("Unable to open the file " + fileName + " : " + +strerror(errno));
+        }
+    }
+    for (auto &r : Registers)
+        for(int i = 0; i < r.offsets.size(); i++){
+            r.data[i].resize(numOfCPU);
+            r.errors[i].resize(numOfCPU);
+        }
+
+    read();
+
+    joulesScale = (Registers[MSR::RAPL_PWR_UNIT].data[0][0] >> Registers[MSR::RAPL_PWR_UNIT].bitDescriptors[3].end) & Registers[MSR::RAPL_PWR_UNIT].bitDescriptors[3].mask;
+    joulesScale = std::pow(0.5, joulesScale);
+}
+
+void MSRRegister::read() {
+    for (auto &r : Registers) {
+        for(int i = 0; i < r.offsets.size(); i++) {
+            for(int cpu = 0; cpu < numOfCPU; cpu++) {
+                try {
+                    r.data[i][cpu] = read(cpu, r.offsets[i]);
+                    r.errors[i][cpu] = false;
+                } catch (RegisterException &ex) {
+                    r.errors[i][cpu] = true;
+                }
+            }
         }
     }
 }
@@ -3308,7 +3345,7 @@ uint64_t MSRRegister::read(int cpu, unsigned int addr) {
     uint64_t data;
     auto r = pread(filesStreams[cpu], &data, sizeof data, addr);
     if(r == -1)
-        throw MSRException(std::string("Unable to read value : ")  + strerror(errno));
+        throw RegisterException(std::string("Unable to read value : ")  + strerror(errno));
 
     if (r != sizeof data) {
         printf("Warning : not the full size has been read\n");
@@ -3317,35 +3354,10 @@ uint64_t MSRRegister::read(int cpu, unsigned int addr) {
     return data;
 }
 
-void MSRRegister::readSMR() {
-    std::cout << MSR::RAPL_PWR_UNIT << std::endl;
-    open();
-
-    uint32_t core_energy_raw;
-    int package_raw;
-    // Read per core energy values
-    std::cout << Registers[MSR::CORE_ENERGY_STAT].name;
-    for (int i = 0; i < numOfCPU; i++) {
-        //printf("%i %lx\n", i, Registers[MSR::CORE_ENERGY_STAT].offsets[0]);
-        std::cout << "    " << (uint32_t) read(i, Registers[MSR::CORE_ENERGY_STAT].offsets[0]);
-    }
-
-    std::cout << std::endl << Registers[MSR::PKG_ENERGY_STAT].name;
-    for (int i = 0; i < numOfCPU; i++)
-        std::cout << "    " << (uint32_t)read(i, Registers[MSR::PKG_ENERGY_STAT].offsets[0]);
-
-    std::cout << std::endl;
-}
-
-MSRRegister::Value::Value(size_t start, size_t end, std::string description) : start(start), end(end), description(std::move(description)) {
-    if(start == 63 && end == 0)
-        mask = 0xFFFFFFFFFFFFFFFF;
-    else if(start != end) {
-        mask = std::pow(2, (start - end) + 1) - 1;
-    }
-
-    auto pos = this->description.find_first_of("\n.:[");
-    name = this->description.substr(0, pos);
-    if(name.find("Reserved") != std::string::npos)
-        reserved = true;
+MSRRegister::Register::Register(char const *MSRname, char const *name, char const *comments, char const *lthree, std::vector<size_t> offsets, std::vector<BitDescriptor> values) :
+                           MSRname(std::move(MSRname)),
+                           lthree(std::move(lthree)),
+                           ::Register(std::move(values), 64, name, comments, std::move(offsets)) {
+    data.resize(this->offsets.size());
+    errors.resize(this->offsets.size());
 }

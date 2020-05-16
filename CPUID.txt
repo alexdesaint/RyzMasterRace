@@ -1,0 +1,1343 @@
+
+CPUID_Fn00000000_EAX [Processor Vendor and Largest Standard Function Number]
+(Core::X86::Cpuid::LargFuncNum)
+Read-only. Reset: 0000_000Dh.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn00000000_EAX
+ Bits Description
+ 31:0 LFuncStd: largest standard function. Read-only. Reset: Fixed,0000_000Dh. The largest CPUID standard
+      function input value supported by the processor implementation.
+CPUID_Fn00000000_EBX [Processor Vendor (ASCII Bytes [3:0])] (Core::X86::Cpuid::ProcVendEbx)
+Read-only. Reset: 6874_7541h.
+Core::X86::Cpuid::ProcVendEbx and Core::X86::Cpuid::ProcVendExtEbx return the same value.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn00000000_EBX
+ Bits Description
+ 31:0 Vendor. Read-only. Reset: Fixed,6874_7541h. ASCII Bytes [3:0] (“h t u A") of the string “AuthenticAMD".
+CPUID_Fn00000000_ECX [Processor Vendor (ASCII Bytes [11:8])] (Core::X86::Cpuid::ProcVendEcx)
+Read-only. Reset: 444D_4163h.
+Core::X86::Cpuid::ProcVendEcx and Core::X86::Cpuid::ProcVendExtEcx return the same value.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn00000000_ECX
+ Bits Description
+ 31:0 Vendor. Read-only. Reset: Fixed,444D_4163h. ASCII Bytes [11:8] (“D M A c") of the string “AuthenticAMD".
+CPUID_Fn00000000_EDX [Processor Vendor (ASCII Bytes [7:4])] (Core::X86::Cpuid::ProcVendEdx)
+Read-only. Reset: 6974_6E65h.
+Core::X86::Cpuid::ProcVendEdx and Core::X86::Cpuid::ProcVendExtEdx return the same value.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn00000000_EDX
+ Bits Description
+ 31:0 Vendor. Read-only. Reset: Fixed,6974_6E65h. ASCII Bytes [7:4] (“i t n e") of the string “AuthenticAMD".
+CPUID_Fn00000001_EAX [Family, Model, Stepping Identifiers] (Core::X86::Cpuid::FamModStep)
+Read-only. Reset: 0080_0FX2h.
+Core::X86::Cpuid::FamModStep and Core::X86::Cpuid::FamModStepExt return the same value.
+
+Family is an 8-bit value and is defined as: Family[7:0]=({0000b,BaseFamily[3:0]}+ExtendedFamily[7:0]).
+   • E.g., If BaseFamily[3:0] == Fh and ExtendedFamily[7:0] == 08h, then Family[7:0] = 17h.
+
+Model is an 8-bit value and is defined as: Model[7:0]={ExtendedModel[3:0],BaseModel[3:0]}.
+   • E.g., If ExtendedModel[3:0] == 1h and BaseModel[3:0] == 8h, then Model[7:0] = 18h.
+   • Model numbers vary with product.
+
+Model numbers are are assigned a letter, 0h = "A", 1h = "B", and so on. Model and Stepping form the Revision. E.g., B2.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn00000001_EAX
+ Bits   Description
+31:28   Reserved.
+27:20   ExtFamily: extended family. Read-only. Reset: 08h.
+19:16   ExtModel: extended model. Read-only. Reset: 0h.
+15:12   Reserved.
+ 11:8   BaseFamily. Read-only. Reset: Fh.
+  7:4   BaseModel. Read-only. Reset: Xh. Model numbers vary with product.
+  3:0   Stepping. Read-only. Reset: 2h.
+CPUID_Fn00000001_EBX [LocalApicId, LogicalProcessorCount, CLFlush] (Core::X86::Cpuid::FeatureIdEbx)
+Read-only.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn00000001_EBX
+ Bits Description
+31:24 LocalApicId: initial local APIC physical ID. Read-only. Reset: XXh.
+23:16 LogicalProcessorCount: logical processor count. Read-only. Reset: Fixed,(Core::X86::Cpuid::SizeId[NC] + 1).
+      Specifies the number of threads in the processor as Core::X86::Cpuid::SizeId[NC]+1.
+15:8 CLFlush: CLFLUSH size in quadwords. Read-only. Reset: Fixed,08h.
+ 7:0 Reserved.
+CPUID_Fn00000001_ECX [Feature Identifiers] (Core::X86::Cpuid::FeatureIdEcx)
+Read-only.
+These values can be over-written by Core::X86::Msr::CPUID_Features.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn00000001_ECX
+ Bits Description
+  31  Reserved. Read-only. Reset: Fixed,0. Reserved for use by hypervisor to indicate guest status.
+  30  RDRAND: RDRAND instruction support. Read-only. Reset: Fixed,1.
+  29  F16C: half-precision convert instruction support. Read-only. Reset: Fixed,1.
+  28  AVX: AVX instruction support. Read-only. Reset: Fixed,1.
+  27  OSXSAVE: OS enabled support for XGETBV/XSETBV. Read-only. Reset: X. 1=The OS has enabled support
+      for XGETBV/XSETBV instructions to query processor extended states.
+ 26 XSAVE: XSAVE (and related) instruction support. Read-only. Reset: Fixed,1. 1=Support provided for the
+      XSAVE, XRSTOR, XSETBV, and XGETBV instructions and the XFEATURE_ENABLED_MASK register.
+ 25 AES: AES instruction support. Read-only. Reset: X.
+ 24 Reserved.
+ 23 POPCNT: POPCNT instruction. Read-only. Reset: Fixed,1.
+ 22 MOVBE: MOVBE instruction support. Read-only. Reset: Fixed,1.
+ 21 X2APIC: x2APIC capability. Read-only. Reset: Fixed,0.
+ 20 SSE42: SSE4.2 instruction support. Read-only. Reset: Fixed,1.
+ 19 SSE41: SSE4.1 instruction support. Read-only. Reset: Fixed,1.
+ 18 Reserved.
+ 17 PCID: process context identifiers support. Read-only. Reset: Fixed,0.
+16:14 Reserved.
+ 13 CMPXCHG16B: CMPXCHG16B instruction. Read-only. Reset: Fixed,1.
+ 12 FMA: FMA instruction support. Read-only. Reset: Fixed,1.
+11:10 Reserved.
+  9 SSSE3: supplemental SSE3 extensions. Read-only. Reset: Fixed,1.
+ 8:4 Reserved.
+  3     Monitor: Monitor/Mwait instructions. Read-only. Reset: !Core::X86::Msr::HWCR[MonMwaitDis].
+  2     Reserved.
+  1     PCLMULQDQ: PCLMULQDQ instruction support. Read-only. Reset: X.
+  0     SSE3: SSE3 extensions. Read-only. Reset: Fixed,1.
+CPUID_Fn00000001_EDX [Feature Identifiers] (Core::X86::Cpuid::FeatureIdEdx)
+Read-only.
+These values can be over-written by Core::X86::Msr::CPUID_Features.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn00000001_EDX
+ Bits Description
+31:29 Reserved.
+  28 HTT: hyper-threading technology. Read-only. Reset: Fixed,(Core::X86::Cpuid::SizeId[NC] != 0). 0=Single
+      thread product (Core::X86::Cpuid::SizeId[NC]==0). 1=Multi thread product (Core::X86::Cpuid::SizeId[NC] !=
+      0).
+  27 Reserved.
+  26 SSE2: SSE2 extensions. Read-only. Reset: Fixed,1.
+  25 SSE: SSE extensions. Read-only. Reset: Fixed,1.
+  24 FXSR: FXSAVE and FXRSTOR instructions. Read-only. Reset: Fixed,1.
+  23 MMX: MMX™ instructions. Read-only. Reset: Fixed,1.
+22:20 Reserved.
+  19 CLFSH: CLFLUSH instruction. Read-only. Reset: Fixed,1.
+  18 Reserved.
+  17 PSE36: page-size extensions. Read-only. Reset: Fixed,1.
+  16 PAT: page attribute table. Read-only. Reset: Fixed,1.
+  15 CMOV: conditional move instructions, CMOV, FCOMI, FCMOV. Read-only. Reset: Fixed,1.
+  14 MCA: machine check architecture, MCG_CAP. Read-only. Reset: Fixed,1.
+  13 PGE: page global extension, CR4.PGE. Read-only. Reset: Fixed,1.
+  12 MTRR: memory-type range registers. Read-only. Reset: Fixed,1.
+  11 SysEnterSysExit: SYSENTER and SYSEXIT instructions. Read-only. Reset: Fixed,1.
+  10 Reserved.
+  9 APIC: advanced programmable interrupt controller (APIC) exists and is enabled. Read-only. Reset: X.
+      Core::X86::Msr::APIC_BAR[ApicEn].
+  8 CMPXCHG8B: CMPXCHG8B instruction. Read-only. Reset: Fixed,1.
+  7 MCE: machine check exception, CR4.MCE. Read-only. Reset: Fixed,1.
+  6 PAE: physical-address extensions (PAE). Read-only. Reset: Fixed,1.
+  5 MSR: AMD model-specific registers (MSRs), with RDMSR and WRMSR instructions. Read-only. Reset:
+      Fixed,1.
+  4 TSC: time stamp counter, RDTSC/RDTSCP instructions, CR4.TSD. Read-only. Reset: Fixed,1.
+  3 PSE: page-size extensions (4 MB pages). Read-only. Reset: Fixed,1.
+  2 DE: debugging extensions, IO breakpoints, CR4.DE. Read-only. Reset: Fixed,1.
+  1 VME: virtual-mode enhancements. Read-only. Reset: Fixed,1.
+  0 FPU: x87 floating point unit on-chip. Read-only. Reset: Fixed,1.
+CPUID_Fn00000005_EAX [Monitor/MWait] (Core::X86::Cpuid::MonMWaitEax)
+Read-only. Reset: 0000_0040h.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn00000005_EAX
+ Bits Description
+31:16 Reserved.
+15:0 MonLineSizeMin: smallest monitor-line size in bytes. Read-only. Reset: Fixed,0040h.
+CPUID_Fn00000005_EBX [Monitor/MWait] (Core::X86::Cpuid::MonMWaitEbx)
+Read-only. Reset: 0000_0040h.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn00000005_EBX
+ Bits Description
+31:16 Reserved.
+15:0 MonLineSizeMax: largest monitor-line size in bytes. Read-only. Reset: Fixed,0040h.
+CPUID_Fn00000005_ECX [Monitor/MWait] (Core::X86::Cpuid::MonMWaitEcx)
+Read-only. Reset: 0000_0003h.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn00000005_ECX
+ Bits   Description
+ 31:2   Reserved.
+  1     IBE: interrupt break-event. Read-only. Reset: Fixed,1.
+  0     EMX: enumerate MONITOR/MWAIT extensions. Read-only. Reset: Fixed,1.
+CPUID_Fn00000005_EDX [Monitor/MWait] (Core::X86::Cpuid::MonMWaitEdx)
+Read-only. Reset: 0000_0011h.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn00000005_EDX
+ Bits   Description
+ 31:8   Reserved.
+  7:4   MWaitC1SubStates: number of C1 sub-cstates supported by MWAIT. Read-only. Reset: Fixed,1h.
+  3:0   MWaitC0SubStates: number of C0 sub-cstates supported by MWAIT. Read-only. Reset: Fixed,1h.
+CPUID_Fn00000006_EAX [Thermal and Power Management] (Core::X86::Cpuid::ThermalPwrMgmtEax)
+Read-only. Reset: 0000_0004h.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn00000006_EAX
+ Bits Description
+ 31:3 Reserved.
+   2 ARAT: always running APIC timer. Read-only. Reset: Fixed,1. 1=Indicates support for APIC timer always
+      running feature.
+  1:0 Reserved.
+CPUID_Fn00000006_EBX [Thermal and Power Management] (Core::X86::Cpuid::ThermalPwrMgmtEbx)
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn00000006_EBX
+ Bits Description
+ 31:0 Reserved.
+CPUID_Fn00000006_ECX [Thermal and Power Management] (Core::X86::Cpuid::ThermalPwrMgmtEcx)
+Read-only. Reset: 0000_0001h.
+These values can be over-written by Core::X86::Msr::CPUID_PWR_THERM.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn00000006_ECX
+ Bits Description
+ 31:1 Reserved.
+  0 EffFreq: effective frequency interface. Read-only. Reset: Fixed,1. 1=Indicates presence of
+      Core::X86::Msr::MPERF and Core::X86::Msr::APERF.
+CPUID_Fn00000006_EDX [Thermal and Power Management] (Core::X86::Cpuid::ThermalPwrMgmtEdx)
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn00000006_EDX
+ Bits Description
+ 31:0 Reserved.
+CPUID_Fn00000007_EAX_x00 [Structured Extended Feature Identifiers]
+(Core::X86::Cpuid::StructExtFeatIdEax0)
+Read-only. Reset: 0000_0000h.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn00000007_EAX_x00
+ Bits Description
+ 31:0 StructExtFeatIdMax. Read-only. Reset: Fixed,0000_0000h. Valid ECX sub-leaf values starting from 0.
+CPUID_Fn00000007_EBX_x00 [Structured Extended Feature Identifiers]
+(Core::X86::Cpuid::StructExtFeatIdEbx0)
+Read-only. Reset: 209C_01A9h.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn00000007_EBX_x00
+ Bits   Description
+31:30   Reserved.
+  29    SHA. Read-only. Reset: Fixed,1.
+28:24   Reserved.
+  23    CLFSHOPT. Read-only. Reset: Fixed,1.
+22:21   Reserved.
+  20    SMAP: Secure Mode Access Prevention is supported. Read-only. Reset: Fixed,1.
+  19    ADX: ADCX and ADOX are present. Read-only. Reset: Fixed,1.
+  18    RDSEED: RDSEED is present. Read-only. Reset: Fixed,1.
+17:9    Reserved.
+  8     BMI2: bit manipulation group 2 instruction support. Read-only. Reset: Fixed,1.
+  7     SMEP: Supervisor Mode Execution protection. Read-only. Reset: Fixed,1.
+  6     Reserved.
+  5     AVX2: AVX extension support. Read-only. Reset: Fixed,1.
+  4     Reserved.
+  3     BMI1: bit manipulation group 1 instruction support. Read-only. Reset: Fixed,1.
+ 2:1    Reserved.
+  0     FSGSBASE: FS and GS base read write instruction support. Read-only. Reset: Fixed,1.
+CPUID_Fn00000007_ECX_x00 [Structured Extended Feature Identifier]
+(Core::X86::Cpuid::StructExtFeatIdEcx0)
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn00000007_ECX_x00
+ Bits Description
+ 31:0 Reserved.
+CPUID_Fn00000007_EDX_x00 [Structured Extended Feature Identifiers]
+(Core::X86::Cpuid::StructExtFeatIdEdx0)
+
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn00000007_EDX_x00
+ Bits Description
+ 31:0 Reserved.
+CPUID_Fn0000000B_EAX [Extended Topology Enumeration] (Core::X86::Cpuid::ExtTopEnumEax)
+Read-only. Reset: 0000_0000h.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn0000000B_EAX
+ Bits Description
+ 31:0 Reserved. Read-only. Reset: Fixed,0000_0000h.
+CPUID_Fn0000000B_EBX [Extended Topology Enumeration] (Core::X86::Cpuid::ExtTopEnumEbx)
+Read-only. Reset: 0000_0000h.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn0000000B_EBX
+ Bits Description
+ 31:0 Reserved. Read-only. Reset: Fixed,0000_0000h.
+CPUID_Fn0000000B_ECX [Extended Topology Enumeration] (Core::X86::Cpuid::ExtTopEnumEcx)
+Read-only. Reset: 0000_0000h.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn0000000B_ECX
+ Bits Description
+ 31:0 Reserved. Read-only. Reset: Fixed,0000_0000h.
+CPUID_Fn0000000B_EDX [Extended Topology Enumeration] (Core::X86::Cpuid::ExtTopEnumEdx)
+Read-only. Reset: 0000_0000h.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn0000000B_EDX
+ Bits Description
+ 31:0 Reserved. Read-only. Reset: Fixed,0000_0000h.
+CPUID_Fn0000000D_EAX_x00 [Processor Extended State Enumeration]
+(Core::X86::Cpuid::ProcExtStateEnumEax00)
+Read-only. Reset: 0000_0007h.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn0000000D_EAX_x00
+ Bits Description
+ 31:0 XFeatureSupportedMask[31:0]. Read-only. Reset: Fixed,0000_0007h.
+      ValidValues:
+      Bit       Name Description
+      [0]       X86  X87 Support.
+      [1]       SSE  128-bit SSE Support.
+      [2]       AVX 256-bit AVX support.
+      [31:3]         Reserved.
+
+CPUID_Fn0000000D_EBX_x00 [Processor Extended State Enumeration]
+(Core::X86::Cpuid::ProcExtStateEnumEbx00)
+Read-only,Volatile. Reset: XXXX_XXXXh.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn0000000D_EBX_x00
+ Bits Description
+ 31:0 XFeatureEnabledSizeMax. Read-only,Volatile. Reset: XXXX_XXXXh.
+      ValidValues:
+      Value     Description
+      0000_0 Reserved.
+      23Fh-
+      0000_0
+      000h
+      0000_0 legacy header + FPU/SSE size; (XCR0[AVX]==0)
+      240h
+      0000_0 Reserved.
+      33Fh-
+      0000_0
+      241h
+      0000_0 legacy header + FPU/SSE + AVX size; (XCR0[AVX]==1)
+      340h
+      FFFF_F Reserved.
+      FFFh-
+      0000_0
+      341h
+
+CPUID_Fn0000000D_ECX_x00 [Processor Extended State Enumeration]
+(Core::X86::Cpuid::ProcExtStateEnumEcx00)
+Read-only. Reset: XXXX_XXXXh.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn0000000D_ECX_x00
+ Bits Description
+ 31:0 XFeatureSupportedSizeMax. Read-only. Reset: Fixed,XXXX_XXXXh. Size in bytes of XSAVE/XRSTOR area
+      for all features that the core supports. See
+      Core::X86::Cpuid::ProcExtStateEnumEbx00[XFeatureEnabledSizeMax].
+      ValidValues:
+       Value      Description
+       0000_0 Reserved.
+       23Fh-
+       0000_0
+       000h
+       0000_0 legacy header + FPU/SSE size; (XCR0[AVX]==0)
+       240h
+       0000_0 Reserved.
+       33Fh-
+       0000_0
+       241h
+       0000_0 legacy header + FPU/SSE + AVX size; (XCR0[AVX]==1)
+       340h
+       FFFF_F Reserved.
+       FFFh-
+       0000_0
+       341h
+
+CPUID_Fn0000000D_EDX_x00 [Processor Extended State Enumeration]
+(Core::X86::Cpuid::ProcExtStateEnumEdx00)
+Read-only. Reset: 0000_0000h.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn0000000D_EDX_x00
+ Bits Description
+ 31:0 XFeatureSupportedMask[63:32]. Read-only. Reset: Fixed,0000_0000h. Upper portion of
+      XFeatureSupportedMask.
+CPUID_Fn0000000D_EAX_x01 [Processor Extended State Enumeration]
+(Core::X86::Cpuid::ProcExtStateEnumEax01)
+Read-only. Reset: 0000_000Fh.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn0000000D_EAX_x01
+ Bits   Description
+ 31:4   Reserved.
+  3     XSAVES. Read-only. Reset: Fixed,1. XSAVES,XRSTORS, and IA32_XSS supported.
+  2     XGETBV. Read-only. Reset: Fixed,1. XGETBV with ECX=1 supported.
+  1     XSAVEC. Read-only. Reset: Fixed,1. XSAVEC and compact XRSTOR supported.
+  0     XSAVEOPT: XSAVEOPT is available. Read-only. Reset: Fixed,1.
+CPUID_Fn0000000D_EBX_x01 [Processor Extended State Enumeration]
+(Core::X86::Cpuid::ProcExtStateEnumEbx01)
+Read-only,Volatile. Reset: XXXX_XXXXh.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn0000000D_EBX_x01
+ Bits Description
+ 31:0 XFeatureEnabledSizeMax. Read-only,Volatile. Reset: XXXX_XXXXh. Reset is 512 + ((XCR0[AVX]) ? 256 :
+      0).
+      ValidValues:
+         Value      Description
+         0000_0     Reserved.
+         23Fh-
+         0000_0
+         000h
+         0000_0     legacy header + FPU/SSE size; (XCR0[AVX]==0)
+         240h
+         0000_0     Reserved.
+         33Fh-
+         0000_0
+         241h
+         0000_0     legacy header + FPU/SSE + AVX size; (XCR0[AVX]==1)
+         340h
+         FFFF_F     Reserved.
+         FFFh-
+         0000_0
+         341h
+
+CPUID_Fn0000000D_ECX_x01 [Processor Extended State Enumeration]
+(Core::X86::Cpuid::ProcExtStateEnumEcx01)
+Read-only. Reset: 0000_0000h.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn0000000D_ECX_x01
+ Bits Description
+ 31:0 Reserved. Read-only. Reset: Fixed,0000_0000h.
+CPUID_Fn0000000D_EDX_x01 [Processor Extended State Enumeration]
+(Core::X86::Cpuid::ProcExtStateEnumEdx01)
+Read-only. Reset: 0000_0000h.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn0000000D_EDX_x01
+ Bits Description
+ 31:0 Reserved. Read-only. Reset: Fixed,0000_0000h.
+CPUID_Fn0000000D_EAX_x02 [Processor Extended State Enumeration]
+(Core::X86::Cpuid::ProcExtStateEnumEax02)
+Read-only. Reset: 0000_0100h.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn0000000D_EAX_x02
+ Bits Description
+ 31:0 YmmSaveStateSize: YMM save state byte size. Read-only. Reset: Fixed,0000_0100h.
+CPUID_Fn0000000D_EBX_x02 [Processor Extended State Enumeration]
+(Core::X86::Cpuid::ProcExtStateEnumEbx02)
+Read-only. Reset: 0000_0240h.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn0000000D_EBX_x02
+ Bits Description
+ 31:0 YmmSaveStateOffset: YMM save state byte offset. Read-only. Reset: Fixed,0000_0240h.
+CPUID_Fn0000000D_ECX_x02 [Processor Extended State Enumeration]
+(Core::X86::Cpuid::ProcExtStateEnumEcx02)
+Read-only. Reset: 0000_0000h.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn0000000D_ECX_x02
+ Bits Description
+ 31:0 Reserved. Read-only. Reset: Fixed,0000_0000h.
+CPUID_Fn0000000D_EDX_x02 [Processor Extended State Enumeration]
+(Core::X86::Cpuid::ProcExtStateEnumEdx02)
+Read-only. Reset: 0000_0000h.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn0000000D_EDX_x02
+ Bits Description
+ 31:0 Reserved. Read-only. Reset: Fixed,0000_0000h.
+CPUID_Fn80000000_EAX [Largest Extended Function Number] (Core::X86::Cpuid::LargExtFuncNum)
+Read-only. Reset: 8000_001Fh.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000000_EAX
+ Bits Description
+ 31:0 LFuncExt: largest extended function. Read-only. Reset: Fixed,8000_001Fh. The largest CPUID extended
+      function input value supported by the processor implementation.
+CPUID_Fn80000000_EBX [Processor Vendor (ASCII Bytes [3:0])] (Core::X86::Cpuid::ProcVendExtEbx)
+Read-only. Reset: 6874_7541h.
+Core::X86::Cpuid::ProcVendEbx and Core::X86::Cpuid::ProcVendExtEbx return the same value.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000000_EBX
+ Bits Description
+ 31:0 Vendor. Read-only. Reset: Fixed,6874_7541h. ASCII Bytes [3:0] (“h t u A") of the string “AuthenticAMD".
+CPUID_Fn80000000_ECX [Processor Vendor (ASCII Bytes [11:8])] (Core::X86::Cpuid::ProcVendExtEcx)
+Read-only. Reset: 444D_4163h.
+Core::X86::Cpuid::ProcVendEcx and Core::X86::Cpuid::ProcVendExtEcx return the same value.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000000_ECX
+ Bits Description
+ 31:0 Vendor. Read-only. Reset: Fixed,444D_4163h. ASCII Bytes [11:8] (“D M A c") of the string “AuthenticAMD".
+CPUID_Fn80000000_EDX [Processor Vendor (ASCII Bytes [7:4])] (Core::X86::Cpuid::ProcVendExtEdx)
+Read-only. Reset: 6974_6E65h.
+Core::X86::Cpuid::ProcVendEdx and Core::X86::Cpuid::ProcVendExtEdx return the same value.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000000_EDX
+ Bits Description
+ 31:0 Vendor. Read-only. Reset: Fixed,6974_6E65h. ASCII Bytes [7:4] (“i t n e") of the string “AuthenticAMD".
+CPUID_Fn80000001_EAX [Family, Model, Stepping Identifiers] (Core::X86::Cpuid::FamModStepExt)
+Read-only. Reset: 0080_0FX2h.
+Core::X86::Cpuid::FamModStep and Core::X86::Cpuid::FamModStepExt return the same value. See
+Core::X86::Cpuid::FamModStep.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000001_EAX
+ Bits   Description
+31:28   Reserved.
+27:20   ExtFamily: extended family. Read-only. Reset: 08h.
+19:16   ExtModel: extended model. Read-only. Reset: 0h.
+15:12   Reserved.
+ 11:8   BaseFamily. Read-only. Reset: Fh.
+  7:4   BaseModel. Read-only. Reset: Xh. Model numbers vary with product.
+  3:0   Stepping. Read-only. Reset: 2h.
+CPUID_Fn80000001_EBX [BrandId Identifier] (Core::X86::Cpuid::BrandId)
+Read-only. Reset: X000_0000h.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000001_EBX
+ Bits Description
+31:28 PkgType: package type. Read-only. Reset: Xh. Specifies the package type.
+      ValidValues:
+      Value     Description
+      1h-0h     Reserved.
+      2h        AM4
+      Fh-3h     Reserved.
+27:0 Reserved.
+CPUID_Fn80000001_ECX [Feature Identifiers] (Core::X86::Cpuid::FeatureExtIdEcx)
+Read-only.
+These values can be over-written by Core::X86::Msr::CPUID_ExtFeatures.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000001_ECX
+ Bits Description
+31:30 Reserved.
+  29 MwaitExtended. Read-only. Reset: !Core::X86::Msr::HWCR[MonMwaitDis]. 1=MWAITX and MONITORX
+      capability is supported.
+  28 PerfCtrExtLLC: Last Level Cache performance counter extensions. Read-only. Reset: Fixed,1. 1=Indicates
+      support for Core::X86::Msr::ChL3PmcCfg and Core::X86::Msr::ChL3Pmc L3 performance counter extensions.
+      L3 performance counter extensions support. See 2.1.11.4 [L3 Cache Performance Monitor Counters] and 2.1.11
+      [Performance Monitor Counters].
+  27 PerfTsc: performance time-stamp counter supported. Read-only. Reset: Fixed,0.
+  26 DataBreakpointExtension. Read-only. Reset: Fixed,1. 1=Indicates data breakpoint support for
+      Core::X86::Msr::DR0_ADDR_MASK, Core::X86::Msr::DR1_ADDR_MASK,
+      Core::X86::Msr::DR2_ADDR_MASK and Core::X86::Msr::DR3_ADDR_MASK.
+25:24 Reserved.
+  23 PerfCtrExtCore: core performance counter extensions support. Read-only. Reset: Fixed,1. 1=Indicates
+      support for Core::X86::Msr::PERF_CTL and Core::X86::Msr::PERF_CTR. See See 2.1.11.3 [Core Performance
+      Monitor Counters] and 2.1.11 [Performance Monitor Counters].
+  22 TopologyExtensions: topology extensions support. Read-only. Reset: Fixed,1. 1=Indicates support for
+      Core::X86::Cpuid::CachePropEax0 and Core::X86::Cpuid::ExtApicId.
+21:18 Reserved.
+  17 TCE: translation cache extension. Read-only. Reset: Fixed,1.
+  16 FMA4: 4-operand FMA instruction support. Read-only. Reset: Fixed,0.
+  15 LWP: lightweight profiling support. Read-only. Reset: Fixed,0.
+  14 Reserved.
+  13 WDT: watchdog timer support. Read-only. Reset: Fixed,1.
+  12 SKINIT: SKINIT and STGI support. Read-only. Reset: Fixed,1.
+  11 XOP: extended operation support. Read-only. Reset: Fixed,0.
+  10 IBS: Instruction Based Sampling. Read-only. Reset: 0.
+  9 OSVW: OS Visible Work-around support. Read-only. Reset: Fixed,1.
+  8 ThreeDNowPrefetch: Prefetch and PrefetchW instructions. Read-only. Reset: Fixed,1.
+  7 MisAlignSse: Misaligned SSE Mode. Read-only. Reset: Fixed,1.
+  6 SSE4A: EXTRQ, INSERTQ, MOVNTSS, and MOVNTSD instruction support. Read-only. Reset: Fixed,1.
+  5 ABM: advanced bit manipulation. Read-only. Reset: Fixed,1. LZCNT instruction support.
+  4 AltMovCr8: LOCK MOV CR0 means MOV CR8. Read-only. Reset: Fixed,1.
+  3 ExtApicSpace: extended APIC register space. Read-only. Reset: Fixed,1.
+  2 SVM: Secure Virtual Mode feature. Read-only. Reset: Fixed,1. Indicates support for: VMRUN, VMLOAD,
+      VMSAVE, CLGI, VMMCALL, and INVLPGA.
+  1 CmpLegacy: core multi-processing legacy mode. Read-only. Reset: Fixed,(Core::X86::Cpuid::SizeId[NC] > 0).
+        0=Single core product (Core::X86::Cpuid::SizeId[NC] == 0). 1=Multi core product
+        (Core::X86::Cpuid::SizeId[NC] !=0 ).
+  0     LahfSahf: LAHF/SAHF instructions. Read-only. Reset: Fixed,1.
+CPUID_Fn80000001_EDX [Feature Identifiers] (Core::X86::Cpuid::FeatureExtIdEdx)
+Read-only. Reset: 2FD3_FXFFh.
+These values can be over-written by Core::X86::Msr::CPUID_ExtFeatures.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000001_EDX
+ Bits   Description
+  31    ThreeDNow: 3DNow!™ instructions. Read-only. Reset: Fixed,0.
+  30    ThreeDNowExt: AMD extensions to 3DNow!™ instructions. Read-only. Reset: Fixed,0.
+  29    LM: long mode. Read-only. Reset: Fixed,1.
+  28    Reserved.
+  27    RDTSCP: RDTSCP instruction. Read-only. Reset: Fixed,1.
+  26    Page1GB: one GB large page support. Read-only. Reset: Fixed,1.
+  25    FFXSR: FXSAVE and FXRSTOR instruction optimizations. Read-only. Reset: Fixed,1.
+  24    FXSR: FXSAVE and FXRSTOR instructions. Read-only. Reset: Fixed,1.
+  23    MMX: MMX™ instructions. Read-only. Reset: Fixed,1.
+  22    MmxExt: AMD extensions to MMX™ instructions. Read-only. Reset: Fixed,1.
+  21    Reserved.
+  20    NX: no-execute page protection. Read-only. Reset: Fixed,1.
+19:18   Reserved.
+  17    PSE36: page-size extensions. Read-only. Reset: Fixed,1.
+  16    PAT: page attribute table. Read-only. Reset: Fixed,1.
+  15    CMOV: conditional move instructions, CMOV, FCOMI, FCMOV. Read-only. Reset: Fixed,1.
+  14    MCA: machine check architecture, MCG_CAP. Read-only. Reset: Fixed,1.
+  13    PGE: page global extension, CR4.PGE. Read-only. Reset: Fixed,1.
+  12    MTRR: memory-type range registers. Read-only. Reset: Fixed,1.
+  11    SysCallSysRet: SYSCALL and SYSRET instructions. Read-only. Reset: Fixed,1.
+  10    Reserved.
+  9     APIC: advanced programmable interrupt controller (APIC) exists and is enabled. Read-only. Reset: X.
+        Reset is Core::X86::Msr::APIC_BAR[ApicEn].
+  8     CMPXCHG8B: CMPXCHG8B instruction. Read-only. Reset: Fixed,1.
+  7     MCE: machine check exception, CR4.MCE. Read-only. Reset: Fixed,1.
+  6     PAE: physical-address extensions (PAE). Read-only. Reset: Fixed,1.
+  5     MSR: model-specific registers (MSRs), with RDMSR and WRMSR instructions. Read-only. Reset: Fixed,1.
+  4     TSC: time stamp counter, RDTSC/RDTSCP instructions, CR4.TSD. Read-only. Reset: Fixed,1.
+  3     PSE: page-size extensions (4 MB pages). Read-only. Reset: Fixed,1.
+  2     DE: debugging extensions, IO breakpoints, CR4.DE. Read-only. Reset: Fixed,1.
+  1     VME: virtual-mode enhancements. Read-only. Reset: Fixed,1.
+  0     FPU: x87 floating point unit on-chip. Read-only. Reset: Fixed,1.
+CPUID_Fn80000002_EAX [Processor Name String Identifier (Bytes [3:0])]
+(Core::X86::Cpuid::ProcNameStr0Eax)
+Read-only.
+Is an alias of Core::X86::Msr::ProcNameString_n0.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000002_EAX
+ Bits Description
+31:24 ProcNameByte3: processor name, byte3. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n0[CpuNameString3].
+23:16 ProcNameByte2: processor name, byte2. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n0[CpuNameString2].
+15:8 ProcNameByte1: processor name, byte1. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n0[CpuNameString1].
+ 7:0 ProcNameByte0: processor name, byte0. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n0[CpuNameString0].
+CPUID_Fn80000002_EBX [Processor Name String Identifier (Bytes [7:4])]
+(Core::X86::Cpuid::ProcNameStr0Ebx)
+Read-only.
+Is an alias of Core::X86::Msr::ProcNameString_n0.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000002_EBX
+ Bits Description
+31:24 ProcNameByte7: processor name, byte 7. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n0[CpuNameString7].
+23:16 ProcNameByte6: processor name, byte 6. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n0[CpuNameString6].
+15:8 ProcNameByte5: processor name, byte 5. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n0[CpuNameString5].
+ 7:0 ProcNameByte4: processor name, byte 4. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n0[CpuNameString4].
+CPUID_Fn80000002_ECX [Processor Name String Identifier (Bytes [11:8])]
+(Core::X86::Cpuid::ProcNameStr0Ecx)
+Read-only.
+Is an alias of Core::X86::Msr::ProcNameString_n1.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000002_ECX
+ Bits Description
+31:24 ProcNameByte11: processor name, byte 11. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n1[CpuNameString3].
+23:16 ProcNameByte10: processor name, byte 10. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n1[CpuNameString2].
+15:8 ProcNameByte9: processor name, byte 9. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n1[CpuNameString1].
+ 7:0 ProcNameByte8: processor name, byte 8. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n1[CpuNameString0].
+CPUID_Fn80000002_EDX [Processor Name String Identifier (Bytes [15:12])]
+(Core::X86::Cpuid::ProcNameStr0Edx)
+Read-only.
+Is an alias of Core::X86::Msr::ProcNameString_n1.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000002_EDX
+ Bits Description
+31:24 ProcNameByte15: processor name, byte 15. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n1[CpuNameString7].
+23:16 ProcNameByte14: processor name, byte 14. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n1[CpuNameString6].
+15:8 ProcNameByte13: processor name, byte 13. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n1[CpuNameString5].
+ 7:0 ProcNameByte12: processor name, byte 12. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n1[CpuNameString4].
+CPUID_Fn80000003_EAX [Processor Name String Identifier (Bytes [19:16])]
+(Core::X86::Cpuid::ProcNameStr1Eax)
+Read-only.
+Is an alias of Core::X86::Msr::ProcNameString_n2.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000003_EAX
+ Bits Description
+31:24 ProcNameByte19: processor name, byte 19. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n2[CpuNameString3].
+23:16 ProcNameByte18: processor name, byte 18. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n2[CpuNameString2].
+15:8 ProcNameByte17: processor name, byte 17. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n2[CpuNameString1].
+ 7:0 ProcNameByte16: processor name, byte 16. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n2[CpuNameString0].
+CPUID_Fn80000003_EBX [Processor Name String Identifier (Bytes [23:20])]
+(Core::X86::Cpuid::ProcNameStr1Ebx)
+Read-only.
+Is an alias of Core::X86::Msr::ProcNameString_n2.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000003_EBX
+ Bits Description
+31:24 ProcNameByte23: processor name, byte 23. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n2[CpuNameString7].
+23:16 ProcNameByte22: processor name, byte 22. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n2[CpuNameString6].
+15:8 ProcNameByte21: processor name, byte 21. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n2[CpuNameString5].
+ 7:0 ProcNameByte20: processor name, byte 20. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n2[CpuNameString4].
+CPUID_Fn80000003_ECX [Processor Name String Identifier (Bytes [27:24])]
+(Core::X86::Cpuid::ProcNameStr1Ecx)
+Read-only.
+Is an alias of Core::X86::Msr::ProcNameString_n3.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000003_ECX
+ Bits Description
+31:24 ProcNameByte27: processor name, byte 27. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n3[CpuNameString3].
+23:16 ProcNameByte26: processor name, byte 26. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n3[CpuNameString2].
+15:8 ProcNameByte25: processor name, byte 25. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n3[CpuNameString1].
+ 7:0 ProcNameByte24: processor name, byte 24. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n3[CpuNameString0].
+CPUID_Fn80000003_EDX [Processor Name String Identifier (Bytes [31:28])]
+(Core::X86::Cpuid::ProcNameStr1Edx)
+Read-only.
+Is an alias of Core::X86::Msr::ProcNameString_n3.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000003_EDX
+ Bits Description
+31:24 ProcNameByte31: processor name, byte 31. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n3[CpuNameString7].
+23:16 ProcNameByte30: processor name, byte 30. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n3[CpuNameString6].
+15:8 ProcNameByte29: processor name, byte 29. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n3[CpuNameString5].
+ 7:0 ProcNameByte28: processor name, byte 28. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n3[CpuNameString4].
+CPUID_Fn80000004_EAX [Processor Name String Identifier (Bytes [35:32])]
+(Core::X86::Cpuid::ProcNameStr2Eax)
+Read-only.
+Is an alias of Core::X86::Msr::ProcNameString_n4.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000004_EAX
+ Bits Description
+31:24 ProcNameByte35: processor name, byte 35. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n4[CpuNameString3].
+23:16 ProcNameByte34: processor name, byte 34. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n4[CpuNameString2].
+15:8 ProcNameByte33: processor name, byte 33. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n4[CpuNameString1].
+ 7:0 ProcNameByte32: processor name, byte 32. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n4[CpuNameString0].
+CPUID_Fn80000004_EBX [Processor Name String Identifier (Bytes [39:36])]
+(Core::X86::Cpuid::ProcNameStr2Ebx)
+Read-only.
+Is an alias of Core::X86::Msr::ProcNameString_n4.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000004_EBX
+ Bits Description
+31:24 ProcNameByte39: processor name, byte 39. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n4[CpuNameString7].
+23:16 ProcNameByte38: processor name, byte 38. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n4[CpuNameString6].
+15:8 ProcNameByte37: processor name, byte 37. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n4[CpuNameString5].
+ 7:0 ProcNameByte36: processor name, byte 36. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n4[CpuNameString4].
+CPUID_Fn80000004_ECX [Processor Name String Identifier (Bytes [43:40])]
+(Core::X86::Cpuid::ProcNameStr2Ecx)
+Read-only.
+Is an alias of Core::X86::Msr::ProcNameString_n5.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000004_ECX
+ Bits Description
+31:24 ProcNameByte43: processor name, byte 43. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n5[CpuNameString3].
+23:16 ProcNameByte42: processor name, byte 42. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n5[CpuNameString2].
+15:8 ProcNameByte41: processor name, byte 41. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n5[CpuNameString1].
+ 7:0 ProcNameByte40: processor name, byte 40. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n5[CpuNameString0].
+CPUID_Fn80000004_EDX [Processor Name String Identifier (Bytes [47:44])]
+(Core::X86::Cpuid::ProcNameStr2Edx)
+Read-only.
+Is an alias of Core::X86::Msr::ProcNameString_n5.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000004_EDX
+ Bits Description
+31:24 ProcNameByte47: processor name, byte 47. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n5[CpuNameString7].
+23:16 ProcNameByte46: processor name, byte 46. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n5[CpuNameString6].
+15:8 ProcNameByte45: processor name, byte 45. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n5[CpuNameString5].
+ 7:0 ProcNameByte44: processor name, byte 44. Read-only. Reset:
+      Core::X86::Msr::ProcNameString_n5[CpuNameString4].
+CPUID_Fn80000005_EAX [L1 TLB 2M/4M Identifiers] (Core::X86::Cpuid::L1Tlb2M4M)
+Read-only.
+This function provides the processor's first level cache and TLB characteristics for each core.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000005_EAX
+ Bits Description
+31:24 L1DTlb2and4MAssoc: data TLB associativity for 2 MB and 4 MB pages. Read-only. Reset: Fixed,FFh. See
+      Core::X86::Cpuid::L1DcId[L1DcAssoc].
+23:16 L1DTlb2and4MSize: data TLB number of entries for 2 MB and 4 MB pages. Read-only. Reset: Fixed,64.
+      The value returned is for the number of entries available for the 2 MB page size; 4 MB pages require two 2 MB
+      entries, so the number of entries available for the 4 MB page size is one-half the returned value.
+15:8 L1ITlb2and4MAssoc: instruction TLB associativity for 2 MB and 4 MB pages. Read-only. Reset: Fixed,FFh.
+      See Core::X86::Cpuid::L1DcId[L1DcAssoc].
+ 7:0 L1ITlb2and4MSize: instruction TLB number of entries for 2 MB and 4 MB pages. Read-only. Reset:
+      Fixed,64. The value returned is for the number of entries available for the 2 MB page size; 4 MB pages require
+      two 2 MB entries, so the number of entries available for the 4 MB page size is one-half the returned value.
+CPUID_Fn80000005_EBX [L1 TLB 4K Identifiers] (Core::X86::Cpuid::L1Tlb4K)
+Read-only.
+See Core::X86::Cpuid::L1Tlb2M4M.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000005_EBX
+ Bits Description
+31:24 L1DTlb4KAssoc: data TLB associativity for 4 KB pages. Read-only. Reset: Fixed,FFh. See
+      Core::X86::Cpuid::L1DcId[L1DcAssoc].
+23:16 L1DTlb4KSize: data TLB number of entries for 4 KB pages. Read-only. Reset: Fixed,64.
+15:8 L1ITlb4KAssoc: instruction TLB associativity for 4 KB pages. Read-only. Reset: Fixed,FFh. See
+      Core::X86::Cpuid::L1DcId[L1DcAssoc].
+ 7:0 L1ITlb4KSize: instruction TLB number of entries for 4 KB pages. Read-only. Reset: Fixed,64.
+CPUID_Fn80000005_ECX [L1 Data Cache Identifiers] (Core::X86::Cpuid::L1DcId)
+Read-only.
+This function provides first level cache characteristics for each core.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000005_ECX
+ Bits Description
+31:24 L1DcSize: L1 data cache size in KB. Read-only. Reset: Fixed,32.
+23:16 L1DcAssoc: L1 data cache associativity. Read-only. Reset: Fixed,8.
+      ValidValues:
+      Value   Description
+      00h     Reserved
+      01h     1 way (direct mapped)
+      02h     2 way
+      03h     3 way
+      FEh-    <Value> way
+      04h
+      FFh     Fully associative
+ 15:8 L1DcLinesPerTag: L1 data cache lines per tag. Read-only. Reset: Fixed,01h.
+  7:0 L1DcLineSize: L1 data cache line size in bytes. Read-only. Reset: Fixed,64.
+CPUID_Fn80000005_EDX [L1 Instruction Cache Identifiers] (Core::X86::Cpuid::L1IcId)
+Read-only.
+This function provides first level cache characteristics for each core.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000005_EDX
+ Bits Description
+31:24 L1IcSize: L1 instruction cache size KB. Read-only. Reset: Fixed,64.
+23:16 L1IcAssoc: L1 instruction cache associativity. Read-only. Reset: Fixed,4.
+      ValidValues:
+      Value     Description
+      00h       Reserved
+      01h       1 way (direct mapped)
+      02h       2 way
+      03h       3 way
+      04h       4 way
+      FEh-      <Value> way
+      05h
+      FFh       Fully associative
+15:8 L1IcLinesPerTag: L1 instruction cache lines per tag. Read-only. Reset: Fixed,01h.
+ 7:0 L1IcLineSize: L1 instruction cache line size in bytes. Read-only. Reset: Fixed,64.
+CPUID_Fn80000006_EAX [L2 TLB 2M/4M Identifiers] (Core::X86::Cpuid::L2Tlb2M4M)
+Read-only.
+This function provides the processor's second level cache and TLB characteristics for each core.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000006_EAX
+ Bits Description
+31:28 L2DTlb2and4MAssoc: L2 data TLB associativity for 2 MB and 4 MB pages. Read-only. Reset: Xh.
+      ValidValues:
+       Value    Description
+       1h-0h    Reserved.
+       2h       2 ways
+       3h       3 ways
+       Fh-4h    Reserved.
+27:16 L2DTlb2and4MSize: L2 data TLB number of entries for 2 MB and 4 MB pages. Read-only. Reset:
+      Fixed,1536. The value returned is for the number of entries available for the 2 MB page size; 4 MB pages require
+      two 2 MB entries, so the number of entries available for the 4 MB page size is one-half the returned value.
+15:12 L2ITlb2and4MAssoc: L2 instruction TLB associativity for 2 MB and 4 MB pages. Read-only. Reset: Fixed,6.
+      ValidValues:
+       Value    Description
+       5h-0h    Reserved.
+       6h      8 ways
+       Fh-7h   Reserved.
+ 11:0 L2ITlb2and4MSize: L2 instruction TLB number of entries for 2 MB and 4 MB pages. Read-only. Reset:
+      Fixed,1024. The value returned is for the number of entries available for the 2 MB page size; 4 MB pages require
+      two 2 MB entries, so the number of entries available for the 4 MB page size is one-half the returned value.
+CPUID_Fn80000006_EBX [L2 TLB 4K Identifiers] (Core::X86::Cpuid::L2Tlb4K)
+Read-only.
+This function provides the processor's second level cache and TLB characteristics for each core.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000006_EBX
+ Bits Description
+31:28 L2DTlb4KAssoc: L2 data TLB associativity for 4 KB pages. Read-only. Reset: Xh.
+      ValidValues:
+      Value     Description
+      4h-0h     Reserved.
+      5h        6 ways
+      6h        8 ways
+      Fh-7h     Reserved.
+27:16 L2DTlb4KSize: L2 data TLB number of entries for 4 KB pages. Read-only. Reset: Fixed,1536.
+15:12 L2ITlb4KAssoc: L2 instruction TLB associativity for 4 KB pages. Read-only. Reset: Fixed,6.
+      ValidValues:
+      Value     Description
+      5h-0h     Reserved.
+      6h        8 ways
+      Fh-7h     Reserved.
+ 11:0 L2ITlb4KSize: L2 instruction TLB number of entries for 4 KB pages. Read-only. Reset: Fixed,1024.
+CPUID_Fn80000006_ECX [L2 Cache Identifiers] (Core::X86::Cpuid::L2CacheId)
+Read-only.
+This function provides second level cache characteristics for each core.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000006_ECX
+ Bits Description
+31:16 L2Size: L2 cache size in KB. Read-only. Reset: Fixed,0200h.
+      ValidValues:
+      Value     Description
+      00FFh- Reserved.
+      0000h
+      0100h 256 KB
+      01FFh- Reserved.
+      0101h
+      0200h 512 KB
+      03FFh- Reserved.
+      0201h
+      0400h 1 MB
+      07FFh- Reserved.
+      0401h
+      0800h 2 MB
+      FFFFh- Reserved.
+      0801h
+15:12 L2Assoc: L2 cache associativity. Read-only. Reset: Fixed,6.
+      ValidValues:
+      Value    Description
+      0h       Disabled.
+      1h       1 way (direct mapped)
+      2h       2 ways
+      3h       Reserved.
+      4h       4 ways
+      5h       Reserved.
+      6h       8 ways
+      7h       Reserved.
+      8h       16 ways
+      9h       Reserved.
+      Ah       32 ways
+      Bh       48 ways
+      Ch       64 ways
+      Dh       96 ways
+      Eh       128 ways
+      Fh       Fully associative
+ 11:8 L2LinesPerTag: L2 cache lines per tag. Read-only. Reset: Fixed,1h.
+  7:0 L2LineSize: L2 cache line size in bytes. Read-only. Reset: Fixed,64.
+CPUID_Fn80000006_EDX [L3 Cache Identifiers] (Core::X86::Cpuid::L3CacheId)
+Read-only.
+This function provides third level cache characteristics shared by all cores of a processor.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000006_EDX
+ Bits Description
+31:18 L3Size: L3 cache size. Read-only. Reset: XXXXh. The L3 cache size in 512 KB units.
+      ValidValues:
+      Value     Description
+      0000h Disabled.
+      3FFFh- (<Value> *0.5) MB
+      0001h
+17:16 Reserved.
+15:12 L3Assoc: L3 cache associativity. Read-only. Reset: Xh.
+      ValidValues:
+      Value     Description
+      7h-0h     Reserved.
+      8h        16 Ways
+      9h        Reserved.
+      Ah        32 Ways
+      Bh        48 Ways
+      Ch        64 Ways
+      Dh        96 Ways
+      Eh        128 Ways
+      Fh        Reserved.
+ 11:8 L3LinesPerTag: L3 cache lines per tag. Read-only. Reset: Fixed,1h.
+  7:0 L3LineSize: L3 cache line size in bytes. Read-only. Reset: Fixed,64.
+CPUID_Fn80000007_EAX [Reserved] (Core::X86::Cpuid::ProcFeedbackCap)
+Read-only. Reset: 0000_0000h.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000007_EAX
+ Bits Description
+ 31:0 Reserved. Read-only. Reset: Fixed,0000_0000h.
+CPUID_Fn80000007_EBX [RAS Capabilities] (Core::X86::Cpuid::RasCap)
+Read-only. Reset: 0000_000Xh.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000007_EBX
+ Bits Description
+ 31:4 Reserved.
+  3 ScalableMca. Read-only. Reset: Fixed,1. 0=Scalable MCA is not supported. 1=Scalable MCA is supported. See
+      3.2 [Machine Check Architecture Extensions] and MCA_CONFIG[McaX] for the respective bank.
+  2 HWA: hardware assert supported. Read-only. Reset: Fixed,0.
+  1 SUCCOR: Software uncorrectable error containment and recovery capability. Read-only. Reset: X. The
+      processor supports software containment of uncorrectable errors through context synchronizing data poisoning
+      and deferred error interrupts; MSR Core::X86::Msr::McaIntrCfg, MCA_STATUS[Deferred] and
+      MCA_STATUS[Poison] exist.
+  0 McaOverflowRecov: MCA overflow recovery support. Read-only. Reset: Fixed,1. 0=MCA overflow
+      conditions require software to shut down the system. 1=MCA overflow conditions (MCi_STATUS[Overflow] ==
+      1) are not fatal; software may safely ignore such conditions. See 3 [Machine Check Architecture].
+CPUID_Fn80000007_ECX [Advanced Power Management Information] (Core::X86::Cpuid::ApmInfoEcx)
+Read-only. Reset: 0000_0000h.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000007_ECX
+ Bits Description
+ 31:0 CmpUnitPwrSampleTimeRatio. Read-only. Reset: Fixed,0000_0000h.
+CPUID_Fn80000007_EDX [Advanced Power Management Information] (Core::X86::Cpuid::ApmInfoEdx)
+Read-only. Reset: 0000_6789h.
+This function provides advanced power management feature identifiers.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000007_EDX
+ Bits   Description
+31:15   Reserved.
+  14    RAPL: running average power limit. Read-only. Reset: Fixed,1.
+  13    ConnectedStandby: Connected Standby. Read-only. Reset: Fixed,1.
+  12    ApmPwrReporting: APM power reporting. Read-only. Reset: Fixed,0.
+  11    ProcFeedbackInterface: processor feedback interface. Read-only. Reset: Fixed,0. 1=Indicates support for
+        processor feedback interface; Core::X86::Cpuid::ProcFeedbackCap.
+  10    EffFreqRO: read-only effective frequency interface. Read-only. Reset: Fixed,1. Indicates presence of
+        Core::X86::Msr::MPerfReadOnly and Core::X86::Msr::APerfReadOnly.
+  9     CPB: core performance boost. Read-only. Reset: 1. 1=Indicates presence of Core::X86::Msr::HWCR[CpbDis]
+        and support for core performance boost.
+  8     TscInvariant: TSC invariant. Read-only. Reset: Fixed,1. The TSC rate is invariant.
+  7     HwPstate: hardware P-state control. Read-only. Reset: Fixed,1. Core::X86::Msr::PStateCurLim,
+        Core::X86::Msr::PStateCtl and Core::X86::Msr::PStateStat exist.
+  6     OneHundredMHzSteps: 100 MHz multiplier Control. Read-only. Reset: Fixed,0.
+ 5:4    Reserved.
+  3     TTP: THERMTRIP. Read-only. Reset: Fixed,1.
+  2     VID: Voltage ID control. Read-only. Reset: Fixed,0. Function replaced by HwPstate.
+  1     FID: Frequency ID control. Read-only. Reset: Fixed,0. Function replaced by HwPstate.
+  0     TS: Temperature sensor. Read-only. Reset: Fixed,1.
+CPUID_Fn80000008_EAX [Long Mode Address Size Identifiers] (Core::X86::Cpuid::LongModeInfo)
+Read-only. Reset: 0000_3030h.
+This provides information about the maximum physical and linear address width supported by the processor.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000008_EAX
+ Bits Description
+31:24 Reserved.
+23:16 GuestPhysAddrSize: maximum guest physical byte address size in bits. Read-only. Reset: Fixed,00h.
+      ValidValues:
+      Value     Description
+      00h       The maximum guest physical address size defined by PhysAddrSize.
+      FFh-      The maximum guest physical address size defined by GuestPhysAddrSize.
+      01h
+15:8 LinAddrSize: Maximum linear byte address size in bits. Read-only. Reset: Fixed,30h.
+ 7:0 PhysAddrSize: Maximum physical byte address size in bits. Read-only. Reset: Fixed,30h.
+CPUID_Fn80000008_EBX [Extended Feature Extensions ID EBX] (Core::X86::Cpuid::FeatureExtIdEbx)
+Read-only. Reset: 0000_0007h.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000008_EBX
+ Bits Description
+ 31:3 Reserved.
+  2 XSaveErPtr. Read-only. Reset: Fixed,1. 1=FXSAVE, XSAVE, FXSAVEOPT, XSAVEC, XSAVES always save
+      error pointers and FXRSTOR, XRSTOR, XRSTORS always restore error pointers is supported.
+  1 IRPerf: instructions retired count support. Read-only. Reset: Fixed,1. 1=Core::X86::Msr::IRPerfCount
+      supported.
+  0 CLZERO: Clear Zero Instruction. Read-only. Reset: Fixed,1. CLZERO instruction zero's out the 64 byte cache
+      line specified in RAX. Note: CLZERO instruction operations are cache-line aligned and RAX[5:0] is ignored.
+CPUID_Fn80000008_ECX [Size Identifiers] (Core::X86::Cpuid::SizeId)
+Read-only. Reset: 0000_X0XXh.
+This provides information about the number of threads supported by the processor.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000008_ECX
+ Bits Description
+31:18 Reserved.
+17:16 PerfTscSize: performance time-stamp counter size. Read-only. Reset: Fixed,0h.
+15:12 ApicIdSize: APIC ID size. Read-only. Reset: Xh. The number of bits in the initial
+      Core::X86::Apic::ApicId[ApicId] value that indicate thread ID within a package.
+ 11:8 Reserved.
+  7:0 NC: number of threads - 1. Read-only. Reset: XXh. The number of threads in the package is NC+1 (eg., if
+      NC=0, then there is one thread).
+CPUID_Fn8000000A_EAX [SVM Revision and Feature Identification] (Core::X86::Cpuid::SvmRevFeatIdEax)
+Read-only. Reset: 0000_0001h.
+This provides SVM revision. If (Core::X86::Cpuid::FeatureExtIdEcx[SVM] == 0) then
+Core::X86::Cpuid::SvmRevFeatIdEax is reserved.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000000A_EAX
+ Bits Description
+ 31:8 Reserved.
+  7:0 SvmRev: SVM revision. Read-only. Reset: Fixed,01h.
+CPUID_Fn8000000A_EBX [SVM Revision and Feature Identification] (Core::X86::Cpuid::SvmRevFeatIdEbx)
+Read-only,Volatile. Reset: 0000_8000h.
+This provides SVM revision and feature information. If (Core::X86::Cpuid::FeatureExtIdEcx[SVM] == 0) then
+Core::X86::Cpuid::SvmRevFeatIdEbx is reserved.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000000A_EBX
+ Bits Description
+ 31:0 NASID: number of address space identifiers (ASID). Read-only,Volatile. Reset: 0000_8000h.
+CPUID_Fn8000000A_EDX [SVM Revision and Feature Identification] (Core::X86::Cpuid::SvmRevFeatIdEdx)
+Read-only. Reset: 0001_B4FFh.
+This provides SVM feature information. If (Core::X86::Cpuid::FeatureExtIdEcx[SVM] == 0) then
+Core::X86::Cpuid::SvmRevFeatIdEdx is reserved.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000000A_EDX
+ Bits   Description
+31:17   Reserved.
+  16    vGIF: virtualized GIF. Read-only. Reset: Fixed,1.
+  15    V_VMSAVE_VMLOAD: virtualized VMLOAD and VMSAVE. Read-only. Reset: Fixed,1.
+  14    Reserved.
+  13    AVIC: AMD virtual interrupt controller. Read-only. Reset: Fixed,1. 1=Support indicated for SVM mode
+        virtualized interrupt controller; Indicates support for Core::X86::Msr::AvicDoorbell.
+ 12     PauseFilterThreshold: PAUSE filter threshold. Read-only. Reset: Fixed,1.
+ 11     Reserved.
+ 10     PauseFilter: pause intercept filter. Read-only. Reset: Fixed,1.
+ 9:8    Reserved.
+  7     DecodeAssists: decode assists. Read-only. Reset: Fixed,1.
+  6     FlushByAsid: flush by ASID. Read-only. Reset: Fixed,1.
+  5     VmcbClean: VMCB clean bits. Read-only. Reset: Fixed,1.
+  4     TscRateMsr: MSR based TSC rate control. Read-only. Reset: Fixed,1. 1=Indicates support for TSC ratio
+        Core::X86::Msr::TscRateMsr.
+  3     NRIPS: NRIP Save. Read-only. Reset: Fixed,1.
+  2     SVML: SVM lock. Read-only. Reset: Fixed,1.
+  1     LbrVirt: LBR virtualization. Read-only. Reset: Fixed,1.
+  0     NP: nested paging. Read-only. Reset: Fixed,1.
+CPUID_Fn80000019_EAX [L1 TLB 1G Identifiers] (Core::X86::Cpuid::L1Tlb1G)
+Read-only.
+This function provides first level TLB characteristics for 1GB pages.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000019_EAX
+ Bits Description
+31:28 L1DTlb1GAssoc: L1 data TLB associativity for 1 GB pages. Read-only. Reset: Fixed,Fh. See
+      Core::X86::Cpuid::L2CacheId[L2Assoc].
+27:16 L1DTlb1GSize: L1 data TLB number of entries for 1 GB pages. Read-only. Reset: Fixed,64.
+15:12 L1ITlb1GAssoc: L1 instruction TLB associativity for 1 GB pages. Read-only. Reset: Fixed,Fh. See
+      Core::X86::Cpuid::L2CacheId[L2Assoc].
+ 11:0 L1ITlb1GSize: L1 instruction TLB number of entries for 1 GB pages. Read-only. Reset: Fixed,64.
+CPUID_Fn80000019_EBX [L2 TLB 1G Identifiers] (Core::X86::Cpuid::L2Tlb1G)
+Read-only. Reset: 0000_0000h.
+This provides 1 GB paging information. The associativity fields are defined by Core::X86::Cpuid::L2Tlb2M4M,
+Core::X86::Cpuid::L2Tlb4K, Core::X86::Cpuid::L2CacheId and Core::X86::Cpuid::L3CacheId.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn80000019_EBX
+ Bits Description
+31:28 L2DTlb1GAssoc: L2 data TLB associativity for 1 GB pages. Read-only. Reset: Fixed,0h. See
+      Core::X86::Cpuid::L2CacheId[L2Assoc].
+27:16 L2DTlb1GSize: L2 data TLB number of entries for 1 GB pages. Read-only. Reset: Fixed,000h.
+15:12 L2ITlb1GAssoc: L2 instruction TLB associativity for 1 GB pages. Read-only. Reset: Fixed,0h. See
+      Core::X86::Cpuid::L2CacheId[L2Assoc].
+ 11:0 L2ITlb1GSize: L2 instruction TLB number of entries for 1 GB pages. Read-only. Reset: Fixed,000h.
+CPUID_Fn8000001A_EAX [Performance Optimization Identifiers] (Core::X86::Cpuid::PerfOptId)
+Read-only. Reset: 0000_0003h.
+This function returns performance related information. For more details on how to use these bits to optimize software,
+see the optimization guide.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001A_EAX
+ Bits   Description
+ 31:3   Reserved.
+  2     FP256. Read-only. Reset: Fixed,0.
+  1     MOVU. Read-only. Reset: Fixed,1.
+  0     FP128. Read-only. Reset: Fixed,1.
+CPUID_Fn8000001B_EAX [Instruction Based Sampling Identifiers] (Core::X86::Cpuid::IbsIdEax)
+Read-only. Reset: 0000_03FFh.
+This function returns IBS feature information.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001B_EAX
+ Bits   Description
+31:11   Reserved.
+  10    IbsOpData4: IBS op data 4 MSR supported. Read-only. Reset: Fixed,0.
+  9     IbsFetchCtlExtd: IBS fetch control extended MSR supported. Read-only. Reset: Fixed,1. Indicates support for
+        Core::X86::Msr::IC_IBS_EXTD_CTL.
+  8     OpBrnFuse: fused branch micro-op indication supported. Read-only. Reset: Fixed,1. Indicates support for
+        Core::X86::Msr::IBS_OP_DATA[IbsOpBrnFuse].
+  7     RipInvalidChk: invalid RIP indication supported. Read-only. Reset: Fixed,1. Indicates support for
+        Core::X86::Msr::IBS_OP_DATA[IbsRipInvalid].
+  6     OpCntExt: IbsOpCurCnt and IbsOpMaxCnt extend by 7 bits. Read-only. Reset: Fixed,1. Indicates support
+        for Core::X86::Msr::IBS_OP_CTL[IbsOpCurCnt[26:20],IbsOpMaxCnt[26:20]].
+  5     BrnTrgt: branch target address reporting supported. Read-only. Reset: Fixed,1.
+  4     OpCnt: op counting mode supported. Read-only. Reset: Fixed,1.
+  3     RdWrOpCnt: read write of op counter supported. Read-only. Reset: Fixed,1.
+  2     OpSam: IBS execution sampling supported. Read-only. Reset: Fixed,1.
+  1     FetchSam: IBS fetch sampling supported. Read-only. Reset: Fixed,1.
+  0     IBSFFV: IBS feature flags valid. Read-only. Reset: Fixed,1.
+CPUID_Fn8000001D_EAX_x00 [Cache Properties (DC)] (Core::X86::Cpuid::CachePropEax0)
+Core::X86::Cpuid::CachePropEax0 reports topology information for the DC.
+If (Core::X86::Cpuid::FeatureExtIdEcx[TopologyExtensions] == 0) then CPUID Fn8000001D_E[D,C,B,A]X are
+reserved.
+_lthree[1:0]_core[3:0]; CPUID_Fn8000001D_EAX_x00
+ Bits Description
+31:26 Reserved.
+25:14 NumSharingCache: number of logical processors sharing cache. Read-only. Reset: XXXh. The number of
+      logical processors sharing this cache is NumSharingCache+1.
+13:10 Reserved.
+  9 FullyAssociative: fully associative cache. Read-only. Reset: Fixed,0. 1=Cache is fully associative.
+  8 SelfInitialization: cache is self-initializing. Read-only. Reset: Fixed,1. 1=Cache is self initializing; cache does
+        not need software initialization.
+ 7:5    CacheLevel: cache level. Read-only. Reset: Fixed,1h. Identifies the cache level.
+        ValidValues:
+         Value    Description
+         0h       Reserved.
+         1h       Level 1
+         2h       Level 2
+         3h       Level 3
+         7h-4h    Reserved.
+ 4:0    CacheType: cache type. Read-only. Reset: Fixed,01h. Identifies the type of cache.
+        ValidValues:
+         Value    Description
+         00h      Null; no more caches.
+         01h      Data cache.
+         02h      Instruction cache.
+         03h      Unified cache.
+         1Fh-04h Reserved.
+
+CPUID_Fn8000001D_EAX_x01 [Cache Properties (IC)] (Core::X86::Cpuid::CachePropEax1)
+Read-only. Reset: 0XXX_X122h.
+Core::X86::Cpuid::CachePropEax1 reports topology information for the IC. See Core::X86::Cpuid::CachePropEax0.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001D_EAX_x01
+ Bits Description
+31:26 Reserved.
+25:14 NumSharingCache: number of logical processors sharing cache. Read-only. Reset: XXXh. See
+      Core::X86::Cpuid::CachePropEax0[NumSharingCache].
+13:10 Reserved.
+  9 FullyAssociative: fully associative cache. Read-only. Reset: Fixed,0. See
+      Core::X86::Cpuid::CachePropEax0[FullyAssociative].
+  8 SelfInitialization: cache is self-initializing. Read-only. Reset: Fixed,1. See
+      Core::X86::Cpuid::CachePropEax0[SelfInitialization].
+ 7:5 CacheLevel: cache level. Read-only. Reset: Fixed,1h. Identifies the cache level. See
+      Core::X86::Cpuid::CachePropEax0[CacheLevel].
+ 4:0 CacheType: cache type. Read-only. Reset: Fixed,02h. See Core::X86::Cpuid::CachePropEax0[CacheType].
+CPUID_Fn8000001D_EAX_x02 [Cache Properties (L2)] (Core::X86::Cpuid::CachePropEax2)
+Read-only. Reset: 0XXX_X143h.
+Core::X86::Cpuid::CachePropEax2 reports topology information for the L2. See Core::X86::Cpuid::CachePropEax0.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001D_EAX_x02
+ Bits Description
+31:26 Reserved.
+25:14 NumSharingCache: number of logical processors sharing cache. Read-only. Reset: XXXh.
+      Core::X86::Cpuid::CachePropEax0[NumSharingCache].
+13:10 Reserved.
+  9 FullyAssociative: fully associative cache. Read-only. Reset: Fixed,0.
+      Core::X86::Cpuid::CachePropEax0[FullyAssociative].
+  8 SelfInitialization: cache is self-initializing. Read-only. Reset: Fixed,1.
+      Core::X86::Cpuid::CachePropEax0[SelfInitialization].
+ 7:5 CacheLevel: cache level. Read-only. Reset: Fixed,2h. Identifies the cache level.
+      Core::X86::Cpuid::CachePropEax0[CacheLevel].
+ 4:0    CacheType: cache type. Read-only. Reset: Fixed,03h. Core::X86::Cpuid::CachePropEax0[CacheType].
+CPUID_Fn8000001D_EAX_x03 [Cache Properties (L3)] (Core::X86::Cpuid::CachePropEax3)
+Read-only. Reset: 0XXX_X163h.
+Core::X86::Cpuid::CachePropEax3 reports topology information for the L3.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001D_EAX_x03
+ Bits Description
+31:26 Reserved.
+25:14 NumSharingCache: number of logical processors sharing cache. Read-only. Reset: XXXh. The number of
+      logical processors sharing this cache is NumSharingCache+1.
+13:10 Reserved.
+  9 FullyAssociative: fully associative cache. Read-only. Reset: Fixed,0.
+      Core::X86::Cpuid::CachePropEax0[FullyAssociative].
+  8 SelfInitialization: cache is self-initializing. Read-only. Reset: Fixed,1.
+      Core::X86::Cpuid::CachePropEax0[SelfInitialization].
+ 7:5 CacheLevel: cache level. Read-only. Reset: Fixed,3h. Identifies the cache level.
+      Core::X86::Cpuid::CachePropEax0[CacheLevel].
+ 4:0 CacheType: cache type. Read-only. Reset: Fixed,03h. Core::X86::Cpuid::CachePropEax0[CacheType].
+CPUID_Fn8000001D_EAX_x04 [Cache Properties Null] (Core::X86::Cpuid::CachePropEax4)
+Read-only. Reset: 0000_0000h.
+Core::X86::Cpuid::CachePropEax4 reports done/null. See Core::X86::Cpuid::CachePropEax0.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001D_EAX_x04
+ Bits Description
+ 31:5 Reserved.
+  4:0 CacheType: cache type. Read-only. Reset: Fixed,00h. Core::X86::Cpuid::CachePropEax0[CacheType].
+CPUID_Fn8000001D_EBX_x00 [Cache Properties (DC)] (Core::X86::Cpuid::CachePropEbx0)
+Read-only. Reset: 01C0_003Fh.
+Core::X86::Cpuid::CachePropEbx0 reports topology information for the DC. See Core::X86::Cpuid::CachePropEax0.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001D_EBX_x00
+ Bits Description
+31:22 CacheNumWays: cache number of ways. Read-only. Reset: Fixed,007h. Cache number of ways is
+      CacheNumWays + 1.
+21:12 CachePhysPartitions: cache physical line partitions. Read-only. Reset: Fixed,000h. Cache partitions is
+      CachePhysPartitions + 1.
+ 11:0 CacheLineSize: cache line size in bytes. Read-only. Reset: Fixed,03Fh. Cache line size in bytes is
+      CacheLineSize + 1.
+CPUID_Fn8000001D_EBX_x01 [Cache Properties (IC)] (Core::X86::Cpuid::CachePropEbx1)
+Read-only. Reset: 00C0_003Fh.
+Core::X86::Cpuid::CachePropEbx1 reports topology information for the IC. See Core::X86::Cpuid::CachePropEax0.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001D_EBX_x01
+ Bits Description
+31:22 CacheNumWays: cache number of ways. Read-only. Reset: Fixed,003h.
+      Core::X86::Cpuid::CachePropEbx0[CacheNumWays].
+21:12 CachePhysPartitions: cache physical line partitions. Read-only. Reset: Fixed,000h.
+      Core::X86::Cpuid::CachePropEbx0[CachePhysPartitions].
+ 11:0 CacheLineSize: cache line size in bytes. Read-only. Reset: Fixed,03Fh.
+      Core::X86::Cpuid::CachePropEbx0[CacheLineSize].
+CPUID_Fn8000001D_EBX_x02 [Cache Properties (L2)] (Core::X86::Cpuid::CachePropEbx2)
+Read-only. Reset: 01C0_003Fh.
+Core::X86::Cpuid::CachePropEbx2 reports topology information for the L2. See Core::X86::Cpuid::CachePropEax0.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001D_EBX_x02
+ Bits Description
+31:22 CacheNumWays: cache number of ways. Read-only. Reset: Fixed,007h. See
+      Core::X86::Cpuid::CachePropEbx0[CacheNumWays].
+21:12 CachePhysPartitions: cache physical line partitions. Read-only. Reset: Fixed,000h. See
+      Core::X86::Cpuid::CachePropEbx0[CachePhysPartitions].
+ 11:0 CacheLineSize: cache line size in bytes. Read-only. Reset: Fixed,03Fh. See
+      Core::X86::Cpuid::CachePropEbx0[CacheLineSize].
+CPUID_Fn8000001D_EBX_x03 [Cache Properties (L3)] (Core::X86::Cpuid::CachePropEbx3)
+Read-only. Reset: 03C0_003Fh.
+Core::X86::Cpuid::CachePropEbx3 reports topology information for the L3. See Core::X86::Cpuid::CachePropEax0.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001D_EBX_x03
+ Bits Description
+31:22 CacheNumWays: cache number of ways. Read-only. Reset: Fixed,00Fh. See
+      Core::X86::Cpuid::CachePropEbx0[CacheNumWays].
+21:12 CachePhysPartitions: cache physical line partitions. Read-only. Reset: Fixed,000h. See
+      Core::X86::Cpuid::CachePropEbx0[CachePhysPartitions].
+ 11:0 CacheLineSize: cache line size in bytes. Read-only. Reset: Fixed,03Fh. See
+      Core::X86::Cpuid::CachePropEbx0[CacheLineSize].
+CPUID_Fn8000001D_EBX_x04 [Cache Properties Null] (Core::X86::Cpuid::CachePropEbx4)
+Read-only. Reset: 0000_0000h.
+Core::X86::Cpuid::CachePropEax4 reports done/null. See Core::X86::Cpuid::CachePropEax0.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001D_EBX_x04
+ Bits Description
+ 31:0 Reserved. Read-only. Reset: Fixed,0000_0000h.
+CPUID_Fn8000001D_ECX_x00 [Cache Properties (DC)] (Core::X86::Cpuid::CachePropEcx0)
+Read-only. Reset: 0000_003Fh.
+Core::X86::Cpuid::CachePropEcx0 reports topology information for the DC. See Core::X86::Cpuid::CachePropEax0.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001D_ECX_x00
+ Bits Description
+ 31:0 CacheNumSets: cache number of sets. Read-only. Reset: Fixed,0000_003Fh. Cache number of sets is
+      CacheNumSets+1.
+CPUID_Fn8000001D_ECX_x01 [Cache Properties (IC)] (Core::X86::Cpuid::CachePropEcx1)
+Read-only. Reset: 0000_00FFh.
+Core::X86::Cpuid::CachePropEcx1 reports topology information for the IC. See Core::X86::Cpuid::CachePropEax0.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001D_ECX_x01
+ Bits Description
+ 31:0 CacheNumSets: cache number of sets. Read-only. Reset: Fixed,0000_00FFh. See
+      Core::X86::Cpuid::CachePropEcx0[CacheNumSets].
+CPUID_Fn8000001D_ECX_x02 [Cache Properties (L2)] (Core::X86::Cpuid::CachePropEcx2)
+Read-only. Reset: 0000_03FFh.
+Core::X86::Cpuid::CachePropEcx2 reports topology information for the L2. See Core::X86::Cpuid::CachePropEax0.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001D_ECX_x02
+ Bits Description
+ 31:0 CacheNumSets: cache number of sets. Read-only. Reset: Fixed,0000_03FFh. See
+        Core::X86::Cpuid::CachePropEcx0[CacheNumSets].
+CPUID_Fn8000001D_ECX_x03 [Cache Properties (L3)] (Core::X86::Cpuid::CachePropEcx3)
+Read-only. Reset: 0000_XXXXh.
+Core::X86::Cpuid::CachePropEcx3 reports topology information for the L3.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001D_ECX_x03
+ Bits Description
+ 31:0 CacheNumSets: cache number of sets. Read-only. Reset: 0000_XXXXh. See
+      Core::X86::Cpuid::CachePropEcx0[CacheNumSets].
+      ValidValues:
+      Value     Description
+      0000_0 Reserved.
+      FFEh-
+      0000_0
+      000h
+      0000_0 4096 L3 Cache Sets.
+      FFFh
+      0000_1 Reserved.
+      FFEh-
+      0000_1
+      000h
+      0000_1 8192 L3 Cache Sets.
+      FFFh
+      FFFF_F Reserved.
+      FFFh-
+      0000_2
+      000h
+
+CPUID_Fn8000001D_ECX_x04 [Cache Properties Null] (Core::X86::Cpuid::CachePropEcx4)
+Read-only. Reset: 0000_0000h.
+Core::X86::Cpuid::CachePropEax3 reports done/null. See Core::X86::Cpuid::CachePropEax0.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001D_ECX_x04
+ Bits Description
+ 31:0 CacheNumSets: cache number of sets. Read-only. Reset: Fixed,0000_0000h.
+CPUID_Fn8000001D_EDX_x00 [Cache Properties (DC)] (Core::X86::Cpuid::CachePropEdx0)
+Read-only. Reset: 0000_0000h.
+Core::X86::Cpuid::CachePropEdx0 reports topology information for the DC. See Core::X86::Cpuid::CachePropEax0.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001D_EDX_x00
+ Bits Description
+ 31:2 Reserved.
+  1 CacheInclusive: cache inclusive. Read-only. Reset: Fixed,0. 0=Cache is not inclusive of lower cache levels.
+      1=Cache is inclusive of lower cache levels.
+  0 WBINVD: Write-Back Invalidate/Invalidate. Read-only. Reset: Fixed,0. 0=WBINVD/INVD invalidates all
+      lower level caches of non-originating cores sharing this cache. 1=WBINVD/INVD not ensured to invalidate all
+      lower level caches of non-originating cores sharing this cache.
+CPUID_Fn8000001D_EDX_x01 [Cache Properties (IC)] (Core::X86::Cpuid::CachePropEdx1)
+Read-only. Reset: 0000_0000h.
+Core::X86::Cpuid::CachePropEdx1 reports topology information for the IC. See Core::X86::Cpuid::CachePropEax0.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001D_EDX_x01
+ Bits Description
+ 31:2 Reserved.
+  1 CacheInclusive: cache inclusive. Read-only. Reset: Fixed,0. See
+      Core::X86::Cpuid::CachePropEdx0[CacheInclusive].
+  0 WBINVD: Write-Back Invalidate/Invalidate. Read-only. Reset: Fixed,0. 0=WBINVD/INVD invalidates all
+      lower level caches of non-originating cores sharing this cache. 1=WBINVD/INVD not guaranteed to invalidate
+      all lower level caches of non-originating cores sharing this cache. See
+      Core::X86::Cpuid::CachePropEdx0[WBINVD].
+CPUID_Fn8000001D_EDX_x02 [Cache Properties (L2)] (Core::X86::Cpuid::CachePropEdx2)
+Read-only. Reset: 0000_0002h.
+Core::X86::Cpuid::CachePropEdx2 reports topology information for the L2. See Core::X86::Cpuid::CachePropEax0.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001D_EDX_x02
+ Bits Description
+ 31:2 Reserved.
+  1 CacheInclusive: cache inclusive. Read-only. Reset: Fixed,1. See
+      Core::X86::Cpuid::CachePropEdx0[CacheInclusive].
+  0 WBINVD: Write-Back Invalidate/Invalidate. Read-only. Reset: Fixed,0. 0=WBINVD/INVD invalidates all
+      lower level caches of non-originating cores sharing this cache. 1=WBINVD/INVD not guaranteed to invalidate
+      all lower level caches of non-originating cores sharing this cache.
+CPUID_Fn8000001D_EDX_x03 [Cache Properties (L3)] (Core::X86::Cpuid::CachePropEdx3)
+Read-only. Reset: 0000_0001h.
+Core::X86::Cpuid::CachePropEdx3 reports reports topology information for the L3. See
+Core::X86::Cpuid::CachePropEax0.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001D_EDX_x03
+ Bits Description
+ 31:2 Reserved.
+  1 CacheInclusive: cache inclusive. Read-only. Reset: Fixed,0. See
+      Core::X86::Cpuid::CachePropEdx0[CacheInclusive].
+  0 WBINVD: Write-Back Invalidate/Invalidate. Read-only. Reset: Fixed,1. 0=WBINVD/INVD invalidates all
+      lower level caches of non-originating cores sharing this cache. 1=WBINVD/INVD not guaranteed to invalidate
+      all lower level caches of non-originating cores sharing this cache.
+CPUID_Fn8000001D_EDX_x04 [Cache Properties Null] (Core::X86::Cpuid::CachePropEdx4)
+Read-only. Reset: 0000_0000h.
+Core::X86::Cpuid::CachePropEax3 reports done/null. See Core::X86::Cpuid::CachePropEax0.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001D_EDX_x04
+ Bits Description
+ 31:0 Reserved. Read-only. Reset: Fixed,0000_0000h.
+CPUID_Fn8000001E_EAX [Extended APIC ID] (Core::X86::Cpuid::ExtApicId)
+Read-only.
+If Core::X86::Cpuid::FeatureExtIdEcx[TopologyExtensions] == 0 then CPUID Fn8000001E_E[D,C,B,A]X are reserved.
+If (Core::X86::Msr::APIC_BAR[ApicEn] == 0) then Core::X86::Cpuid::ExtApicId[ExtendedApicId] is reserved.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001E_EAX
+ Bits Description
+ 31:0 ExtendedApicId: extended APIC ID. Read-only. See 2.1.8.2.1.3 [ApicId Enumeration Requirements].
+      Reset: Core::X86::Msr::APIC_BAR[ApicEn] ? Fixed,{00_0000h , Core::X86::Apic::ApicId[ApicId]} :
+      Fixed,0000_0000h.
+CPUID_Fn8000001E_EBX [Core Identifiers] (Core::X86::Cpuid::CoreId)
+Read-only. Reset: 0000_XXXXh.
+See Core::X86::Cpuid::ExtApicId.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001E_EBX
+ Bits Description
+31:16 Reserved.
+15:8 ThreadsPerCore: threads per core. Read-only. Reset: XXh. The number of threads per core is
+      ThreadsPerCore+1.
+ 7:0 CoreId: core ID. Read-only. Reset: Fixed,XXh.
+      Description: For Family 17, Model 1, Revision 1 and later:
+          CoreId = ({2'b0, DieId[1:0], LogicalComplexId[0], LogicalThreadId[2:0]} >> SMT).
+CPUID_Fn8000001E_ECX [Node Identifiers] (Core::X86::Cpuid::NodeId)
+Read-only. Reset: 0000_0XXXh.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001E_ECX
+ Bits Description
+31:11 Reserved.
+10:8 NodesPerProcessor: Node per processor. Read-only. Reset: XXXb.
+      ValidValues:
+      Value     Description
+      0h        1 node per processor.
+      1h        2 nodes per processor.
+      2h        Reserved.
+      3h        4 nodes per processor.
+      7h-4h     Reserved.
+ 7:0 NodeId: Node ID. Read-only. Reset: Fixed,XXh.
+CPUID_Fn8000001F_EAX [AMD Secure Encryption EAX] (Core::X86::Cpuid::SecureEncryptionEax)
+Read-only. Reset: 0000_000Fh.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001F_EAX
+ Bits   Description
+ 31:4   Reserved.
+  3     SevEs. Read-only. Reset: Fixed,1.
+  2     VmPgFlush: VM Page Flush MSR is supported. Read-only. Reset: Fixed,1. See
+        Core::X86::Msr::VMPAGE_FLUSH.
+  1     SEV: Secure Encrypted Virtualization supported. Read-only. Reset: Fixed,1.
+  0     SME: Secure Memory Encryption supported. Read-only. Reset: Fixed,1.
+CPUID_Fn8000001F_EBX [AMD Secure Encryption EBX] (Core::X86::Cpuid::SecureEncryptionEbx)
+Read-only. Reset: 0000_016Fh.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001F_EBX
+ Bits Description
+31:12 Reserved.
+ 11:6 MemEncryptPhysAddWidth. Read-only. Reset: 05h. Reduction of physical address space in bits when memory
+      encryption is enabled (0 indicates no reduction).
+      ValidValues:
+       Value    Description
+       00h      Physical Address width is not reduced.
+       01h      Physical Address width is reduced by one.
+       02h      Physical Address width is reduced by two.
+       03h      Physical Address width is reduced by three.
+       04h      Physical Address width is reduced by four.
+       05h      Physical Address width is reduced by five.
+         3Fh-06h Reserved.
+ 5:0     CBit. Read-only. Reset: 2Fh. Page table bit number used to enable memory encryption.
+CPUID_Fn8000001F_ECX [AMD Secure Encryption ECX] (Core::X86::Cpuid::SecureEncryptionEcx)
+Read-only. Reset: 0000_000Fh.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001F_ECX
+ Bits Description
+ 31:0 NumEncryptedGuests. Read-only. Reset: 0000_000Fh. Number of encrypted guests supported simultaneously.
+CPUID_Fn8000001F_EDX [Minimum ASID] (Core::X86::Cpuid::SecureEncryptionEdx)
+Read-only. Reset: 0000_000Xh.
+_lthree[1:0]_core[3:0]_thread[1:0]; CPUID_Fn8000001F_EDX
+ Bits Description
+ 31:0 MinimumSEVASID: Minimum SEV enabled, SEV-ES disabled ASID. Read-only. Reset: 0000_000Xh.
+      Indicates the minimum ASID value that must be used for an SEV-enabled, SEV-ES-disabled guest.

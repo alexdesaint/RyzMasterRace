@@ -7,19 +7,11 @@
 #include <utility>
 #include <vector>
 
-class MSRException : public std::exception {
-    std::string msg;
-
-public:
-    explicit MSRException(std::string msg) : msg(std::move(msg)) {}
-
-    const char *what() const noexcept override {
-        return msg.c_str();
-    }
-};
+#include <Register.hpp>
+#include <RegisterException.hpp>
 
 class MSRRegister {
-private:
+public:
     enum MSR {
         TSC = 0,
         APIC_BAR,
@@ -135,48 +127,23 @@ private:
         IC_IBS_EXTD_CTL,
     };
 
-    class Value {
+    class Register : public ::Register {
     public:
-        const size_t start, end;
-        const std::string description;
-        std::string name;
-        int64_t mask = 1;
-        bool reserved = false;
+        char const *MSRname, *lthree;
 
-        Value(size_t start, size_t end, std::string description);
+        Register(char const *MSRname, char const *name, char const *comments, char const *lthree, std::vector<size_t> offsets, std::vector<BitDescriptor> values);
     };
 
-    class Register {
-    public:
-        const std::string MSRname, name, comments, lthree;
-        const std::vector<size_t> offsets;
-        const std::vector<Value> values;
+    static std::vector<Register> Registers;
 
-        Register(std::string MSRname, std::string name, std::string comments, std::string lthree,
-                 std::vector<size_t> offsets,
-                 std::vector<Value> values) : MSRname(std::move(MSRname)), name(std::move(name)), comments(std::move(comments)), lthree(std::move(lthree)), offsets(std::move(offsets)), values(std::move(values)) {
+    static unsigned int numOfCPU;
+    static std::vector<int> filesStreams;
+    static double joulesScale;
 
-            size_t s = 0;
-            for (auto v : this->values) {
-                s += v.start - v.end + 1;
-            }
+    static void open();
 
-            if (s != 64)
-                printf("Warning : \'%s\' values not equal to 64 (s = %zu).\n", this->name.c_str(), s);
-        }
-    };
-
-    static const std::vector<Register> Registers;
-
-    unsigned int numOfCPU = 0;
-    std::vector<int> filesStreams;
-
-    void open();
-
-    uint64_t read(int cpu, unsigned int addr);
-
-public:
-    void readSMR();
+    static void read();
+    static uint64_t read(int cpu, unsigned int addr);
 
     friend std::ostream &operator<<(std::ostream &os, MSRRegister const &m);
 };
