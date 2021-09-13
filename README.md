@@ -2,7 +2,7 @@
 
 Simple sensor reader for AMD Family 17h (Ryzen).
 
-The target platform is Linux, but i will try to make it work on Windows as well.
+The target platform is Linux.
 
 ## Troubleshooting
 
